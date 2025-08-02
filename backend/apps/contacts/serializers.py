@@ -4,7 +4,18 @@ from .models import ContactMessage, ContactResponse, Newsletter
 class ContactMessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContactMessage
-        fields = '__all__'
+        fields = ['name', 'email', 'subject', 'message']  # Только нужные поля для создания
+        
+    def create(self, validated_data):
+        """Создаем сообщение с дополнительными полями"""
+        return ContactMessage.objects.create(
+            name=validated_data['name'],
+            email=validated_data['email'],
+            subject=validated_data['subject'],
+            message=validated_data['message'],
+            status='new',  # Устанавливаем статус по умолчанию
+            is_read=False,  # По умолчанию не прочитано
+        )    
 
 class ContactResponseSerializer(serializers.ModelSerializer):
     class Meta:

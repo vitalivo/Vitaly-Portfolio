@@ -23,6 +23,8 @@ import {
   Menu,
   Award,
   Download,
+  Code,
+  Terminal,
 } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
@@ -63,6 +65,7 @@ const messages = {
       subtitle: "Recent projects and work",
       viewProject: "View Project",
       viewCode: "View Code",
+      technologies: "Technologies Used",
     },
     blog: {
       title: "Blog",
@@ -126,6 +129,7 @@ const messages = {
       subtitle: "Последние проекты и работы",
       viewProject: "Посмотреть проект",
       viewCode: "Посмотреть код",
+      technologies: "Используемые технологии",
     },
     blog: {
       title: "Блог",
@@ -189,6 +193,7 @@ const messages = {
       subtitle: "פרויקטים ועבודות אחרונות",
       viewProject: "צפה בפרויקט",
       viewCode: "צפה בקוד",
+      technologies: "טכנולוגיות בשימוש",
     },
     blog: { title: "בלוג", subtitle: "מחשבות ותובנות על פיתוח ווב", readMore: "קרא עוד", readTime: "דקות קריאה" },
     contact: {
@@ -224,27 +229,174 @@ const languages = [
   { code: "he" as Locale, name: "עברית", flag: "🇮🇱" },
 ]
 
+// 🎯 ВСЕ 11 РЕАЛЬНЫХ ПРОЕКТОВ ВИТАЛИЯ (из твоего файла)
 const projects = [
   {
-    title: "E-commerce Platform",
-    description: "Full-stack e-commerce solution with Django REST API and Next.js frontend",
-    technologies: ["Django", "Next.js", "PostgreSQL", "Tailwind CSS"],
-    projectUrl: "https://example.com",
-    githubUrl: "https://github.com",
+    id: 1,
+    title: "Insurance Platform",
+    description: "Professional insurance platform with modern UI/UX design and comprehensive functionality",
+    longDescription:
+      "A complete insurance platform built with modern web technologies, featuring responsive design, user authentication, policy management, and claims processing.",
+    technologies: ["HTML5", "CSS3", "JavaScript", "Bootstrap", "Responsive Design"],
+    projectUrl: "https://vitalivo.github.io/insurance-platform/",
+    githubUrl: "https://github.com/vitalivo/insurance-platform",
+    image: "/images/projects/insurance-platform.jpg",
+    type: "Commercial",
+    status: "Live",
+    featured: true,
+    year: "2024",
   },
   {
-    title: "Task Management App",
-    description: "Collaborative task management application with real-time updates",
-    technologies: ["React", "Node.js", "MongoDB", "Socket.io"],
-    projectUrl: "https://example.com",
-    githubUrl: "https://github.com",
+    id: 2,
+    title: "News Portal (Django)",
+    description: "Full-stack news portal with Django REST API, multilingual support, and admin panel",
+    longDescription:
+      "A comprehensive news portal built with Django, featuring REST API, user authentication, article management, multilingual support (translations), and admin interface.",
+    technologies: ["Django", "Python", "REST API", "SQLite", "HTML", "CSS", "i18n"],
+    projectUrl: "#",
+    githubUrl: "https://github.com/vitalivo/NEWS_PORTALL",
+    image: "/images/projects/news-portal.jpg",
+    type: "Full-Stack",
+    status: "Completed",
+    featured: true,
+    year: "2024",
   },
   {
+    id: 3,
+    title: "Telegram Bot",
+    description: "Intelligent Telegram bot with automated responses and user interaction features",
+    longDescription:
+      "A feature-rich Telegram bot built with Python, providing automated responses, user management, and integration with external APIs.",
+    technologies: ["Python", "Telegram Bot API", "SQLite", "Asyncio"],
+    projectUrl: "#",
+    githubUrl: "https://github.com/vitalivo/pythonProject_zoo.git",
+    image: "/images/projects/telegram-bot.jpg",
+    type: "Backend",
+    status: "Active",
+    featured: false,
+    year: "2024",
+  },
+  {
+    id: 4,
+    title: "convenient blog",
+    description: "Beautiful, fast and convenient blog",
+    longDescription:
+      "A modern frontend application showcasing advanced CSS, JavaScript, and responsive design principles.",
+    technologies: ["HTML5", "CSS3", "JavaScript", "SASS", "Webpack"],
+    projectUrl: "https://vitalivo.github.io/youtalk-blog/",
+    githubUrl: "https://github.com/vitalivo/Youltalk-Blog.git",
+    image: "/images/projects/frontend-app.jpg",
+    type: "Frontend",
+    status: "Completed",
+    featured: false,
+    year: "2025",
+  },
+  {
+    id: 5,
+    title: "slider for the site",
+    description: "slider for the site by layout. images and information about the object change",
+    longDescription: "slider for the site by layout. images and information about the object change",
+    technologies: ["HTML5", "CSS3", "JavaScript", "SASS", "Webpack", "React"],
+    projectUrl: " https://vitalivo.github.io/Slider/",
+    githubUrl: "https://github.com/vitalivo/Slider.git",
+    image: "/images/projects/backend-api.jpg",
+    type: "Backend",
+    status: "Completed",
+    featured: false,
+    year: "2025",
+  },
+  {
+    id: 6,
     title: "Portfolio Website",
-    description: "Multi-language portfolio website with CMS integration",
-    technologies: ["Next.js", "TypeScript", "Django", "PostgreSQL"],
-    projectUrl: "https://example.com",
-    githubUrl: "https://github.com",
+    description: "Multi-language portfolio website with Django backend and Next.js frontend",
+    longDescription:
+      "A comprehensive portfolio website featuring Django REST API backend, Next.js frontend, multilingual support (EN/RU/HE), and modern responsive design.",
+    technologies: ["Next.js", "TypeScript", "Django", "PostgreSQL", "Tailwind CSS", "i18n"],
+    projectUrl: "#",
+    githubUrl: "https://github.com/vitalivo/Vitaly-Portfolio.git",
+    image: "/images/projects/portfolio-website.jpg",
+    type: "Full-Stack",
+    status: "In Development",
+    featured: true,
+    year: "2025",
+  },
+  {
+    id: 8,
+    title: "React Kanban Board",
+    description: "Interactive task management application with drag-and-drop functionality",
+    longDescription:
+      "A responsive Kanban board built with React that allows users to create, organize, and track tasks across different development stages (Backlog, Ready, In Progress, Finished). The application features local storage persistence, detailed task views, and user profile management.",
+    technologies: [
+      "React",
+      "TypeScript",
+      "React Router",
+      "CSS Modules",
+      "LocalStorage API",
+      "React Testing Library",
+      "React DnD (optional for drag-and-drop)",
+    ],
+    projectUrl: "https://vitalivo.github.io/Kanban-Board/",
+    githubUrl: "https://github.com/vitalivo/Kanban-Board.git",
+    image: "/images/projects/kanban-board.jpg",
+    type: "Web Application",
+    status: "Completed",
+    featured: false,
+    year: "2025",
+  },
+  {
+    id: 9,
+    title: "Silant Forklift Management System",
+    description: "Industrial equipment maintenance tracking platform for Chuvashia Power Unit Plant",
+    longDescription:
+      "A comprehensive web application for monitoring and maintaining Silant-brand forklifts throughout their lifecycle. The system provides real-time tracking of technical specifications, maintenance schedules, and repair claims with role-based access control for different stakeholders in the equipment lifecycle.",
+    technologies: [
+      "Django",
+      "Django REST Framework",
+      "PostgreSQL",
+      "React",
+      "Redux",
+      "Material-UI",
+      "Django-allauth",
+      "Chart.js",
+      "Docker",
+    ],
+    projectUrl: "#",
+    githubUrl: "https://github.com/vitalivo/silant-2.git",
+    image: "/images/projects/silant-system.jpg",
+    type: "Enterprise Web Application",
+    status: "Deployed in Production",
+    featured: true,
+    year: "2023",
+  },
+  {
+    id: 10,
+    title: "Real-Time Chat with Geolocation",
+    description: "WebSocket-based chat application with echo server and geolocation features",
+    longDescription:
+      "An interactive chat application implementing bidirectional WebSocket communication with wss://echo-ws-service.herokuapp.com. Features include real-time messaging, geolocation sharing via OpenStreetMap integration, and responsive UI design.",
+    technologies: ["WebSocket API", "JavaScript", "HTML5 Geolocation API", "CSS3", "OpenStreetMap Integration"],
+    projectUrl: "#",
+    githubUrl: "https://github.com/vitalivo/module_41.git",
+    image: "/images/projects/websocket-chat.jpg",
+    type: "Web Application",
+    status: "Completed",
+    featured: true,
+    year: "2025",
+  },
+  {
+    id: 11,
+    title: "MMORPG Community Bulletin Board",
+    description: "Fan server notice board with email authentication and rich content posts",
+    longDescription:
+      "A full-stack web application for MMORPG communities featuring categorized advertisements, response system, and email notifications. Users can create rich media posts, receive responses, and manage interactions through a private dashboard.",
+    technologies: ["Django", "Python", "PostgreSQL", "Celery", "Redis", "Bootstrap", "jQuery", "CKEditor"],
+    projectUrl: "#",
+    githubUrl: "https://github.com/vitalivo/Bulletin_Board_MMORPG-.git",
+    image: "/images/projects/mmorpg-bulletin.jpg",
+    type: "Full-Stack Web Application",
+    status: "Completed",
+    featured: true,
+    year: "2025",
   },
 ]
 
@@ -271,8 +423,8 @@ const skillCategories = [
     category: "database",
     skills: [
       { name: "PostgreSQL", level: 85 },
+      { name: "SQLite", level: 90 },
       { name: "MongoDB", level: 70 },
-      { name: "Redis", level: 75 },
     ],
   },
   {
@@ -285,55 +437,294 @@ const skillCategories = [
   },
 ]
 
-// НОВАЯ СЕКЦИЯ: Сертификаты (пока mock данные)
+// 🎯 ВСЕ 15 РЕАЛЬНЫХ СЕРТИФИКАТОВ ВИТАЛИЯ (из твоего файла)
 const certificates = [
   {
-    title: "Django Advanced Certification",
-    issuer: "Django Software Foundation",
-    date: "Dec 2024",
-    credentialId: "DSF-2024-001",
-    image: "/placeholder.svg?height=200&width=300&text=Django+Certificate",
-    verifyUrl: "https://example.com/verify",
+    title: "Python Full Stack Web Development",
+    issuer: "Skillfactory",
+    date: "22.07.2025",
+    credentialId: "202507-CLXXXIV-170",
+    image: "/images/certificates/Voloshin Vitaliy.jpg",
+    verifyUrl: "#",
+    skills: [
+      "Python",
+      "Django",
+      "Web Development",
+      "HTML",
+      "CSS",
+      "JavaScript",
+      "React",
+      "Next.js",
+      "TypeScript",
+      "Tailwind CSS",
+      "Gunicorn",
+      "Docker",
+      "Git",
+      "Linux",
+      "PostgreSQL",
+      "SQLite",
+      "MongoDB",
+      "REST API",
+    ],
+    score: "100%",
+    distinction: true,
   },
   {
-    title: "React Professional Developer",
-    issuer: "Meta",
-    date: "Nov 2024",
-    credentialId: "META-RCT-2024",
-    image: "/placeholder.svg?height=200&width=300&text=React+Certificate",
-    verifyUrl: "https://example.com/verify",
+    title: "Django 5 for beginners",
+    issuer: "Stepik",
+    date: "Sep 2024",
+    credentialId: "2559185",
+    image: "/images/certificates/django-stepik.jpg",
+    verifyUrl: "https://stepik.org/cert/2559185",
+    skills: ["Django", "Python", "Web Development"],
+    score: "100%",
+    distinction: true,
   },
   {
-    title: "AWS Cloud Practitioner",
-    issuer: "Amazon Web Services",
-    date: "Oct 2024",
-    credentialId: "AWS-CP-2024-VIT",
-    image: "/placeholder.svg?height=200&width=300&text=AWS+Certificate",
-    verifyUrl: "https://example.com/verify",
+    title: "SQL Basics",
+    issuer: "stepik",
+    date: "August 2024",
+    credentialId: "2537534",
+    image: "/images/certificates/sql-stepik.jpg",
+    verifyUrl: "https://stepik.org/cert/2537534?lang=en",
+    skills: ["Python", "SQL", "Web Development"],
+  },
+  {
+    title: "Python Generation",
+    issuer: "stepik",
+    date: "february 2024",
+    credentialId: "2362720",
+    image: "/images/certificates/python-generanion.jpg",
+    verifyUrl: "https://stepik.org/cert/2362720?lang=en",
+    skills: ["Python", "Web Development"],
+  },
+  {
+    title: "Indie Python",
+    issuer: "stepik",
+    date: "march 2024",
+    credentialId: "2362720",
+    image: "/images/certificates/indie-python.jpg",
+    verifyUrl: "https://stepik.org/cert/2404819?lang=en",
+    skills: ["Python", "Web Development"],
+  },
+  {
+    title: "Python advenced",
+    issuer: "stepik",
+    date: "may 2024",
+    credentialId: "2362720",
+    image: "/images/certificates/python-advenced.jpg",
+    verifyUrl: "https://stepik.org/cert/2466174?lang=en",
+    skills: ["Python", "Web Development"],
+  },
+  {
+    title: "Python good",
+    issuer: "stepik",
+    date: "may 2024",
+    credentialId: "2469505",
+    image: "/images/certificates/python-good.jpg",
+    verifyUrl: "https://stepik.org/cert/2469505?lang=en",
+    skills: ["Python", "Web Development"],
+  },
+  {
+    title: "Fundamental JavaScript",
+    issuer: "stepik",
+    date: "march 2025",
+    credentialId: "2795524",
+    image: "/images/certificates/fundamental-javascript.jpg",
+    verifyUrl: "https://stepik.org/cert/2795524?lang=en",
+    skills: ["JavaScript", "Web Development", "Frontend Development"],
+  },
+  {
+    title: "Django ",
+    issuer: "stepik",
+    date: "october 2024",
+    credentialId: "2610331",
+    image: "/images/certificates/django-egorov.jpg",
+    verifyUrl: "https://stepik.org/cert/2610331?lang=en",
+    skills: ["Django", "Python", "Web Development"],
+  },
+  {
+    title: "OOP ",
+    issuer: "stepik",
+    date: "june 2024",
+    credentialId: "2492907",
+    image: "/images/certificates/oop-egorov.jpg",
+    verifyUrl: "hhttps://stepik.org/cert/2492907?lang=en",
+    skills: ["Python", "Web Development"],
+  },
+  {
+    title: "OOP ",
+    issuer: "stepik",
+    date: "october 2024",
+    credentialId: "2492907",
+    image: "/images/certificates/oop-balakirev.jpg",
+    verifyUrl: "https://stepik.org/cert/2613008?lang=en",
+    skills: ["Python", "Web Development"],
+  },
+  {
+    title: "Html & CSS",
+    issuer: "stepik",
+    date: "september 2024",
+    credentialId: "2590540",
+    image: "/images/certificates/html-css.jpg",
+    verifyUrl: "https://stepik.org/cert/2590540?lang=en",
+    skills: ["HTML", "CSS", "Web Development"],
+  },
+  {
+    title: "Html & CSS & JS",
+    issuer: "stepik",
+    date: "august 2024",
+    credentialId: "2544095",
+    image: "/images/certificates/html-css-js.jpg",
+    verifyUrl: "https://stepik.org/cert/2544095?lang=en",
+    skills: ["HTML", "CSS", "Web Development", "JavaScript"],
+  },
+  {
+    title: "Django",
+    issuer: "stepik",
+    date: "september 2024",
+    credentialId: "2559185",
+    image: "/images/certificates/django-5.jpg",
+    verifyUrl: "https://stepik.org/cert/2559185?lang=en",
+    skills: ["Django", "Python", "Web Development"],
+  },
+  {
+    title: "Java",
+    issuer: "stepik",
+    date: "march 2025",
+    credentialId: "2559185",
+    image: "/images/certificates/java-pro.jpg",
+    verifyUrl: "https://stepik.org/cert/2789194?lang=en",
+    skills: ["Javascript", "Web Development", "Frontend Development"],
+  },
+  {
+    title: "HTML & CSS & JS",
+    issuer: "stepik",
+    date: "april 2025",
+    credentialId: "2822344",
+    image: "/images/certificates/html-css-js1.jpg",
+    verifyUrl: "https://stepik.org/cert/2822344?lang=en",
+    skills: ["Javascript", "Web Development", "Frontend Development"],
   },
 ]
 
 const blogPosts = [
   {
-    title: "Building Modern Web Applications with Django and Next.js",
-    excerpt: "Learn how to create full-stack applications using Django REST framework and Next.js",
-    date: "Jan 15, 2024",
+    title: "Building a News Portal with Django REST API",
+    excerpt:
+      "Learn how to create a comprehensive news portal with Django, featuring REST API, multilingual support, and admin interface",
+    date: "Jan 15, 2025",
+    readTime: 12,
+    tags: ["Django", "REST API", "Python"],
+    slug: "django-news-portal-tutorial",
+    category: "Backend",
+  },
+  {
+    title: "Creating Professional Insurance Platform UI",
+    excerpt:
+      "Step-by-step guide to building a modern insurance platform with responsive design and user-friendly interface",
+    date: "Jan 10, 2025",
     readTime: 8,
-    tags: ["Django", "Next.js", "Full Stack"],
+    tags: ["HTML", "CSS", "JavaScript", "UI/UX"],
+    slug: "insurance-platform-ui-design",
+    category: "Frontend",
   },
   {
-    title: "TypeScript Best Practices for React Developers",
-    excerpt: "Essential TypeScript patterns and practices for building robust React applications",
-    date: "Jan 10, 2024",
-    readTime: 6,
-    tags: ["TypeScript", "React", "Best Practices"],
+    title: "React Kanban Board: From Concept to Production",
+    excerpt:
+      "Complete walkthrough of building an interactive task management application with drag-and-drop functionality using React",
+    date: "Jan 8, 2025",
+    readTime: 15,
+    tags: ["React", "TypeScript", "LocalStorage"],
+    slug: "react-kanban-board-tutorial",
+    category: "Frontend",
   },
   {
-    title: "Optimizing Database Performance in Django",
-    excerpt: "Tips and techniques for improving database performance in Django applications",
-    date: "Jan 5, 2024",
+    title: "Enterprise Equipment Management with Django",
+    excerpt: "How I built the Silant forklift management system for industrial equipment tracking and maintenance",
+    date: "Jan 5, 2025",
+    readTime: 18,
+    tags: ["Django", "PostgreSQL", "Enterprise"],
+    slug: "silant-equipment-management-system",
+    category: "Backend",
+  },
+  {
+    title: "WebSocket Real-Time Chat Implementation",
+    excerpt:
+      "Building a real-time chat application with WebSocket API, geolocation features, and OpenStreetMap integration",
+    date: "Jan 3, 2025",
     readTime: 10,
-    tags: ["Django", "Database", "Performance"],
+    tags: ["WebSocket", "JavaScript", "Real-time"],
+    slug: "websocket-realtime-chat-tutorial",
+    category: "Frontend",
+  },
+  {
+    title: "MMORPG Community Platform Development",
+    excerpt:
+      "Creating a bulletin board system for gaming communities with email notifications and rich content management",
+    date: "Dec 30, 2024",
+    readTime: 14,
+    tags: ["Django", "Celery", "Community"],
+    slug: "mmorpg-bulletin-board-development",
+    category: "Full-Stack",
+  },
+  {
+    title: "From Beginner to Full Stack: My Learning Journey",
+    excerpt:
+      "Personal story of learning web development from Python basics to full-stack applications, including challenges and breakthroughs",
+    date: "Dec 28, 2024",
+    readTime: 6,
+    tags: ["Career", "Learning", "Python"],
+    slug: "fullstack-learning-journey",
+    category: "Career",
+  },
+  {
+    title: "Modern CSS Techniques for Responsive Design",
+    excerpt: "Advanced CSS techniques used in real projects, including Grid, Flexbox, and responsive design patterns",
+    date: "Dec 25, 2024",
+    readTime: 9,
+    tags: ["CSS", "Responsive Design", "Frontend"],
+    slug: "modern-css-responsive-techniques",
+    category: "Frontend",
+  },
+  {
+    title: "Building Scalable Django Applications",
+    excerpt: "Best practices for structuring Django projects, from small apps to enterprise-level systems like Silant",
+    date: "Dec 22, 2024",
+    readTime: 16,
+    tags: ["Django", "Architecture", "Best Practices"],
+    slug: "scalable-django-applications",
+    category: "Backend",
+  },
+  {
+    title: "Telegram Bot Development with Python",
+    excerpt:
+      "Complete guide to building intelligent Telegram bots with Python, including user management and API integration",
+    date: "Dec 20, 2024",
+    readTime: 11,
+    tags: ["Python", "Telegram Bot", "API"],
+    slug: "python-telegram-bot-guide",
+    category: "Backend",
+  },
+  {
+    title: "Portfolio Website: Django + Next.js Integration",
+    excerpt:
+      "How to build a multilingual portfolio with Django REST API backend and Next.js frontend, including deployment strategies",
+    date: "Dec 18, 2024",
+    readTime: 20,
+    tags: ["Django", "Next.js", "Full-Stack"],
+    slug: "portfolio-django-nextjs-integration",
+    category: "Full-Stack",
+  },
+  {
+    title: "Database Design for Django Applications",
+    excerpt:
+      "Designing efficient database schemas for Django projects, with examples from real enterprise applications",
+    date: "Dec 15, 2024",
+    readTime: 13,
+    tags: ["Django", "PostgreSQL", "Database"],
+    slug: "django-database-design-guide",
+    category: "Backend",
   },
 ]
 
@@ -354,12 +745,37 @@ export default function HomePage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-    toast.success(t("contact.success"))
+
+    // Попытка отправить данные на Django API
+    try {
+      const formData = new FormData(e.target as HTMLFormElement)
+      const response = await fetch("http://127.0.0.1:8000/api/contacts/messages/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.get("name"),
+          email: formData.get("email"),
+          subject: formData.get("subject"),
+          message: formData.get("message"),
+        }),
+      })
+
+      if (response.ok) {
+        toast.success(t("contact.success"))
+        ;(e.target as HTMLFormElement).reset()
+      } else {
+        throw new Error("Server error")
+      }
+    } catch (error) {
+      console.error("API Error:", error)
+      toast.error(t("contact.error"))
+    }
+
     setIsSubmitting(false)
   }
 
-  // ИСПРАВЛЕНО: Добавлены Skills и Certificates в навигацию
   const navigation = [
     { name: "nav.home", href: "#hero" },
     { name: "nav.about", href: "#about" },
@@ -372,13 +788,30 @@ export default function HomePage() {
 
   const currentLanguage = languages.find((lang) => lang.code === locale)
 
+  // Фирменный логотип компонент
+  const VitalyLogo = () => (
+    <div className="flex items-center gap-2">
+      <div className="relative">
+        <div className="w-10 h-10 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-lg flex items-center justify-center shadow-lg">
+          <Code className="h-6 w-6 text-white" />
+        </div>
+        <div className="absolute -top-1 -right-1 w-4 h-4 bg-yellow-400 rounded-full flex items-center justify-center">
+          <Terminal className="h-2 w-2 text-gray-900" />
+        </div>
+      </div>
+      <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+        Vitaliy
+      </span>
+    </div>
+  )
+
   return (
     <div className={locale === "he" ? "rtl" : "ltr"}>
       {/* Header */}
       <header className="fixed top-0 w-full bg-background/80 backdrop-blur-sm border-b z-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
-            <div className="text-2xl font-bold">Vitaly</div>
+            <VitalyLogo />
 
             <nav className="hidden md:flex space-x-6">
               {navigation.map((item) => (
@@ -449,7 +882,7 @@ export default function HomePage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center text-white">
             <p className="text-lg text-white/80 mb-4">{t("hero.greeting")}</p>
-            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold mb-6 text-white drop-shadow-lg">Vitaly</h1>
+            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold mb-6 text-white drop-shadow-lg">Vitaliy</h1>
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-yellow-300 mb-6 drop-shadow-lg">
               {t("hero.title")}
             </h2>
@@ -476,7 +909,7 @@ export default function HomePage() {
                 className="text-white hover:bg-white/20 hover:text-yellow-300"
                 asChild
               >
-                <a href="https://github.com" target="_blank" rel="noopener noreferrer">
+                <a href="https://github.com/vitalivo" target="_blank" rel="noopener noreferrer">
                   <Github className="h-6 w-6" />
                 </a>
               </Button>
@@ -486,7 +919,7 @@ export default function HomePage() {
                 className="text-white hover:bg-white/20 hover:text-yellow-300"
                 asChild
               >
-                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">
+                <a href="https://linkedin.com/in/vitaly-voloshin-07356983" target="_blank" rel="noopener noreferrer">
                   <Linkedin className="h-6 w-6" />
                 </a>
               </Button>
@@ -496,7 +929,7 @@ export default function HomePage() {
                 className="text-white hover:bg-white/20 hover:text-yellow-300"
                 asChild
               >
-                <a href="mailto:contact@vitaly.dev">
+                <a href="mailto:vitalivo@gmail.com">
                   <Mail className="h-6 w-6" />
                 </a>
               </Button>
@@ -511,7 +944,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* About - С МЕСТОМ ДЛЯ ФОТОГРАФИИ */}
+      {/* About - С РЕАЛЬНОЙ ФОТОГРАФИЕЙ */}
       <section
         id="about"
         className="py-20 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-blue-950 dark:via-indigo-950 dark:to-purple-950"
@@ -532,35 +965,40 @@ export default function HomePage() {
                   <p className="text-muted-foreground mb-4 leading-relaxed">{t("about.description1")}</p>
                   <p className="text-muted-foreground leading-relaxed">{t("about.description2")}</p>
 
-                  {/* Добавляем яркие статистики */}
+                  {/* Обновленные статистики на основе реальных проектов */}
                   <div className="grid grid-cols-3 gap-4 mt-6">
                     <div className="text-center p-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg text-white">
-                      <div className="text-2xl font-bold">3+</div>
+                      <div className="text-2xl font-bold">2+</div>
                       <div className="text-sm opacity-90">Years</div>
                     </div>
                     <div className="text-center p-3 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg text-white">
-                      <div className="text-2xl font-bold">50+</div>
+                      <div className="text-2xl font-bold">{projects.length}</div>
                       <div className="text-sm opacity-90">Projects</div>
                     </div>
                     <div className="text-center p-3 bg-gradient-to-br from-green-500 to-green-600 rounded-lg text-white">
-                      <div className="text-2xl font-bold">100%</div>
-                      <div className="text-sm opacity-90">Quality</div>
+                      <div className="text-2xl font-bold">{certificates.length}</div>
+                      <div className="text-sm opacity-90">Certificates</div>
                     </div>
                   </div>
                 </div>
 
                 <div className="flex justify-center">
                   <div className="relative">
-                    {/* МЕСТО ДЛЯ ТВОЕЙ ФОТОГРАФИИ */}
+                    {/* РЕАЛЬНАЯ ФОТОГРАФИЯ ВИТАЛИЯ */}
                     <div className="w-64 h-64 bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-2xl overflow-hidden">
-                      {/* Замени src на путь к твоей фотографии */}
+                      {/* ЗАМЕНИ НА ПУТЬ К ТВОЕЙ ФОТОГРАФИИ */}
                       <img
-                        src="/images/foto1.jpg"
-                        alt="Vitaly - Full Stack Developer"
+                        src="/images/vitaly-photo.jpg" // УКАЖИ ПРАВИЛЬНЫЙ ПУТЬ К ФОТОГРАФИИ
+                        alt="Vitaliy Voloshyn - Full Stack Developer"
                         className="w-full h-full object-cover rounded-full"
+                        onError={(e) => {
+                          // Fallback если фото не загрузилось
+                          e.currentTarget.style.display = "none"
+                          e.currentTarget.nextElementSibling!.style.display = "flex"
+                        }}
                       />
-                      {/* Если фото нет, показываем эмодзи */}
-                      {/* <span className="text-6xl">👨‍💻</span> */}
+                      {/* Fallback эмодзи если фото не загрузилось */}
+                      <span className="text-6xl hidden">👨‍💻</span>
                     </div>
                     {/* Декоративные элементы */}
                     <div className="absolute -top-4 -right-4 w-8 h-8 bg-yellow-400 rounded-full animate-pulse"></div>
@@ -623,7 +1061,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Portfolio - ЯРКАЯ ВЕРСИЯ */}
+      {/* Portfolio - ВСЕ 11 ПРОЕКТОВ */}
       <section
         id="portfolio"
         className="py-20 bg-gradient-to-br from-purple-50 via-pink-50 to-red-50 dark:from-purple-950 dark:via-pink-950 dark:to-red-950"
@@ -634,6 +1072,7 @@ export default function HomePage() {
               {t("portfolio.title")}
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">{t("portfolio.subtitle")}</p>
+            <p className="text-sm text-muted-foreground mt-2">Showing all {projects.length} projects</p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -642,20 +1081,65 @@ export default function HomePage() {
                 "from-blue-500 to-purple-600",
                 "from-green-500 to-teal-600",
                 "from-orange-500 to-red-600",
+                "from-pink-500 to-rose-600",
+                "from-indigo-500 to-blue-600",
+                "from-purple-500 to-pink-600",
               ]
 
               return (
                 <Card
-                  key={index}
+                  key={project.id}
                   className="h-full hover:shadow-2xl transition-all duration-300 hover:scale-105 border-0 shadow-xl bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm"
                 >
                   <CardHeader>
                     <div
-                      className={`aspect-video bg-gradient-to-br ${gradients[index]} rounded-lg mb-4 flex items-center justify-center shadow-lg`}
+                      className={`aspect-video bg-gradient-to-br ${gradients[index % gradients.length]} rounded-lg mb-4 flex items-center justify-center shadow-lg overflow-hidden relative`}
                     >
-                      <span className="text-6xl">🚀</span>
+                      {/* РЕАЛЬНЫЕ ИЗОБРАЖЕНИЯ ПРОЕКТОВ */}
+                      <img
+                        src={
+                          project.image ||
+                          "/placeholder.svg?height=200&width=300&text=" + encodeURIComponent(project.title) ||
+                          "/placeholder.svg"
+                        }
+                        alt={project.title}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          // Fallback если изображение не загрузилось
+                          e.currentTarget.style.display = "none"
+                          e.currentTarget.nextElementSibling!.style.display = "flex"
+                        }}
+                      />
+                      {/* Fallback эмодзи */}
+                      <span className="text-6xl text-white hidden">🚀</span>
+
+                      {/* Показываем тип проекта */}
+                      <div className="absolute top-2 right-2 bg-black/70 text-white px-2 py-1 rounded-full text-xs font-bold">
+                        {project.type}
+                      </div>
+
+                      {/* Показываем статус */}
+                      <div
+                        className={`absolute top-2 left-2 px-2 py-1 rounded-full text-xs font-bold ${
+                          project.status === "Live"
+                            ? "bg-green-500 text-white"
+                            : project.status === "In Development"
+                              ? "bg-yellow-500 text-black"
+                              : "bg-blue-500 text-white"
+                        }`}
+                      >
+                        {project.status}
+                      </div>
+
+                      {/* Показываем featured проекты */}
+                      {project.featured && (
+                        <div className="absolute bottom-2 left-2 bg-yellow-500 text-black px-2 py-1 rounded-full text-xs font-bold">
+                          ⭐ Featured
+                        </div>
+                      )}
                     </div>
                     <CardTitle className="text-xl text-purple-700 dark:text-purple-300">{project.title}</CardTitle>
+                    <p className="text-sm text-muted-foreground">{project.year}</p>
                   </CardHeader>
                   <CardContent>
                     <p className="text-muted-foreground mb-4">{project.description}</p>
@@ -667,9 +1151,14 @@ export default function HomePage() {
                           "bg-green-100 text-green-800",
                           "bg-purple-100 text-purple-800",
                           "bg-orange-100 text-orange-800",
+                          "bg-pink-100 text-pink-800",
+                          "bg-indigo-100 text-indigo-800",
                         ]
                         return (
-                          <Badge key={tech} className={`${badgeColors[techIndex % badgeColors.length]} border-0`}>
+                          <Badge
+                            key={tech}
+                            className={`${badgeColors[techIndex % badgeColors.length]} border-0 text-xs`}
+                          >
                             {tech}
                           </Badge>
                         )
@@ -677,16 +1166,18 @@ export default function HomePage() {
                     </div>
 
                     <div className="flex gap-2">
-                      <Button
-                        size="sm"
-                        className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white border-0"
-                        asChild
-                      >
-                        <a href={project.projectUrl} target="_blank" rel="noopener noreferrer">
-                          <ExternalLink className="h-4 w-4 mr-2" />
-                          {t("portfolio.viewProject")}
-                        </a>
-                      </Button>
+                      {project.projectUrl !== "#" && (
+                        <Button
+                          size="sm"
+                          className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white border-0"
+                          asChild
+                        >
+                          <a href={project.projectUrl} target="_blank" rel="noopener noreferrer">
+                            <ExternalLink className="h-4 w-4 mr-2" />
+                            {t("portfolio.viewProject")}
+                          </a>
+                        </Button>
+                      )}
                       <Button
                         size="sm"
                         className="bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-white border-0"
@@ -706,7 +1197,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* НОВАЯ СЕКЦИЯ: Certificates */}
+      {/* Certificates - ВСЕ 16 СЕРТИФИКАТОВ */}
       <section
         id="certificates"
         className="py-20 bg-gradient-to-br from-indigo-50 via-blue-50 to-cyan-50 dark:from-indigo-950 dark:via-blue-950 dark:to-cyan-950"
@@ -717,6 +1208,7 @@ export default function HomePage() {
               {t("certificates.title")}
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">{t("certificates.subtitle")}</p>
+            <p className="text-sm text-muted-foreground mt-2">Showing all {certificates.length} certificates</p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -734,9 +1226,35 @@ export default function HomePage() {
                 >
                   <CardHeader>
                     <div
-                      className={`aspect-video bg-gradient-to-br ${gradients[index]} rounded-lg mb-4 flex items-center justify-center shadow-lg`}
+                      className={`aspect-video bg-gradient-to-br ${gradients[index % gradients.length]} rounded-lg mb-4 flex items-center justify-center shadow-lg overflow-hidden relative`}
                     >
-                      <Award className="h-16 w-16 text-white" />
+                      {/* РЕАЛЬНОЕ ИЗОБРАЖЕНИЕ СЕРТИФИКАТА */}
+                      <img
+                        src={cert.image || "/placeholder.svg?height=200&width=300&text=Certificate"}
+                        alt={cert.title}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          // Fallback если изображение не загрузилось
+                          e.currentTarget.style.display = "none"
+                          e.currentTarget.nextElementSibling!.style.display = "flex"
+                        }}
+                      />
+                      {/* Fallback иконка */}
+                      <Award className="h-16 w-16 text-white hidden" />
+
+                      {/* Показываем оценку если есть */}
+                      {cert.score && (
+                        <div className="absolute top-2 right-2 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+                          {cert.score}
+                        </div>
+                      )}
+
+                      {/* Показываем "с отличием" если есть */}
+                      {cert.distinction && (
+                        <div className="absolute top-2 left-2 bg-yellow-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+                          ⭐ Distinction
+                        </div>
+                      )}
                     </div>
                     <CardTitle className="text-xl text-indigo-700 dark:text-indigo-300">{cert.title}</CardTitle>
                   </CardHeader>
@@ -751,6 +1269,15 @@ export default function HomePage() {
                       <p className="text-sm text-muted-foreground">
                         <strong>ID:</strong> {cert.credentialId}
                       </p>
+                    </div>
+
+                    {/* Навыки из сертификата */}
+                    <div className="flex flex-wrap gap-1 mb-4">
+                      {cert.skills.map((skill) => (
+                        <Badge key={skill} variant="secondary" className="text-xs">
+                          {skill}
+                        </Badge>
+                      ))}
                     </div>
 
                     <div className="flex gap-2">
@@ -769,7 +1296,7 @@ export default function HomePage() {
                         className="bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white border-0"
                         asChild
                       >
-                        <a href="#" download>
+                        <a href={cert.image} download>
                           <Download className="h-4 w-4 mr-2" />
                           {t("certificates.download")}
                         </a>
@@ -783,7 +1310,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Blog - ЯРКАЯ ВЕРСИЯ */}
+      {/* Blog - ВСЕ 12 СТАТЕЙ */}
       <section
         id="blog"
         className="py-20 bg-gradient-to-br from-yellow-50 via-orange-50 to-red-50 dark:from-yellow-950 dark:via-orange-950 dark:to-red-950"
@@ -794,6 +1321,7 @@ export default function HomePage() {
               {t("blog.title")}
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">{t("blog.subtitle")}</p>
+            <p className="text-sm text-muted-foreground mt-2">Showing all {blogPosts.length} articles</p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -811,7 +1339,7 @@ export default function HomePage() {
                 >
                   <CardHeader>
                     <div
-                      className={`aspect-video bg-gradient-to-br ${gradients[index]} rounded-lg mb-4 flex items-center justify-center shadow-lg`}
+                      className={`aspect-video bg-gradient-to-br ${gradients[index % gradients.length]} rounded-lg mb-4 flex items-center justify-center shadow-lg`}
                     >
                       <span className="text-6xl text-white">📝</span>
                     </div>
@@ -882,7 +1410,7 @@ export default function HomePage() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-lg text-blue-700 dark:text-blue-300">Email</h3>
-                  <p className="text-muted-foreground">contact@vitaly.dev</p>
+                  <p className="text-muted-foreground">vitalivo@gmail.com</p>
                 </div>
               </div>
 
@@ -892,7 +1420,7 @@ export default function HomePage() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-lg text-green-700 dark:text-green-300">Phone</h3>
-                  <p className="text-muted-foreground">+1 (555) 123-4567</p>
+                  <p className="text-muted-foreground">+972 50 645 7335</p>
                 </div>
               </div>
 
@@ -902,7 +1430,7 @@ export default function HomePage() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-lg text-purple-700 dark:text-purple-300">Location</h3>
-                  <p className="text-muted-foreground">Remote / Available Worldwide</p>
+                  <p className="text-muted-foreground">Israel</p>
                 </div>
               </div>
             </div>
@@ -917,7 +1445,12 @@ export default function HomePage() {
                     <Label htmlFor="name" className="text-teal-700 dark:text-teal-300 font-medium">
                       {t("contact.name")}
                     </Label>
-                    <Input id="name" required className="border-2 border-teal-200 focus:border-teal-500 rounded-lg" />
+                    <Input
+                      name="name"
+                      id="name"
+                      required
+                      className="border-2 border-teal-200 focus:border-teal-500 rounded-lg"
+                    />
                   </div>
 
                   <div>
@@ -925,6 +1458,7 @@ export default function HomePage() {
                       {t("contact.email")}
                     </Label>
                     <Input
+                      name="email"
                       id="email"
                       type="email"
                       required
@@ -937,6 +1471,7 @@ export default function HomePage() {
                       {t("contact.subject")}
                     </Label>
                     <Input
+                      name="subject"
                       id="subject"
                       required
                       className="border-2 border-teal-200 focus:border-teal-500 rounded-lg"
@@ -948,6 +1483,7 @@ export default function HomePage() {
                       {t("contact.message")}
                     </Label>
                     <Textarea
+                      name="message"
                       id="message"
                       rows={5}
                       required
@@ -974,7 +1510,7 @@ export default function HomePage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h3 className="text-3xl font-bold mb-4 bg-gradient-to-r from-yellow-400 to-pink-400 bg-clip-text text-transparent">
-              Vitaly
+              Vitaliy
             </h3>
             <p className="text-gray-300 mb-6 text-lg">Full Stack Developer</p>
 
@@ -985,7 +1521,7 @@ export default function HomePage() {
                 className="text-white hover:bg-white/20 hover:text-yellow-400 w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm"
                 asChild
               >
-                <a href="https://github.com" target="_blank" rel="noopener noreferrer">
+                <a href="https://github.com/vitalivo" target="_blank" rel="noopener noreferrer">
                   <Github className="h-6 w-6" />
                 </a>
               </Button>
@@ -995,7 +1531,7 @@ export default function HomePage() {
                 className="text-white hover:bg-white/20 hover:text-blue-400 w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm"
                 asChild
               >
-                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">
+                <a href="https://linkedin.com/in/vitaly-voloshin-07356983" target="_blank" rel="noopener noreferrer">
                   <Linkedin className="h-6 w-6" />
                 </a>
               </Button>
@@ -1005,14 +1541,14 @@ export default function HomePage() {
                 className="text-white hover:bg-white/20 hover:text-pink-400 w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm"
                 asChild
               >
-                <a href="mailto:contact@vitaly.dev">
+                <a href="mailto:vitalivo@gmail.com">
                   <Mail className="h-6 w-6" />
                 </a>
               </Button>
             </div>
 
             <div className="border-t border-white/20 pt-8">
-              <p className="text-sm text-gray-400">© 2025 Vitaly. All rights reserved.</p>
+              <p className="text-sm text-gray-400">© 2025 Vitaliy Voloshyn. All rights reserved.</p>
             </div>
           </div>
         </div>
