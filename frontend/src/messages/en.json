@@ -1,0 +1,90 @@
+{
+  "navigation": {
+    "home": "Home",
+    "about": "About",
+    "skills": "Skills",
+    "portfolio": "Portfolio",
+    "blog": "Blog",
+    "contact": "Contact",
+    "resume": "Resume"
+  },
+  "hero": {
+    "greeting": "Hello, I'm",
+    "name": "Vitaly Voloshyn",
+    "title": "Full Stack Developer",
+    "subtitle": "I create modern web applications with Django and Next.js",
+    "description": "Passionate about clean code and user experience.",
+    "cta": "View My Work",
+    "contact": "Get In Touch"
+  },
+  "about": {
+    "title": "About Me",
+    "subtitle": "Passionate developer with expertise in modern web technologies",
+    "description": "I'm a passionate Full Stack Developer with experience in building web applications using modern technologies. I love creating efficient, scalable solutions and learning new technologies.",
+    "experience": "Experience",
+    "projects": "Projects Completed",
+    "technologies": "Technologies",
+    "download_cv": "Download CV"
+  },
+  "skills": {
+    "title": "Skills & Technologies",
+    "subtitle": "Technologies I work with",
+    "frontend": "Frontend",
+    "backend": "Backend",
+    "database": "Database",
+    "tools": "Tools & Others"
+  },
+  "portfolio": {
+    "title": "My Portfolio",
+    "subtitle": "Recent projects and work",
+    "view_project": "View Project",
+    "view_code": "View Code",
+    "all": "All",
+    "frontend": "Frontend",
+    "backend": "Backend",
+    "fullstack": "Full Stack",
+    "technologies": "Technologies Used"
+  },
+  "blog": {
+    "title": "Blog & Articles",
+    "subtitle": "Sharing knowledge and experiences in web development",
+    "search_placeholder": "Search articles...",
+    "read_more": "Read More",
+    "no_posts": "No blog posts found",
+    "clear_filters": "Clear Filters",
+    "readTime": "min read",
+    "noArticles": "No articles found",
+    "allCategories": "All Categories",
+    "featured": "Featured",
+    "loadingArticles": "Loading articles...",
+    "errorLoading": "Error loading articles",
+    "tryAgain": "Try Again",
+    "showAllArticles": "Show All Articles",
+    "articlesFromApi": "articles from Django API"
+  },
+  "contact": {
+    "title": "Get In Touch",
+    "subtitle": "Let's discuss your next project",
+    "name": "Name",
+    "email": "Email",
+    "subject": "Subject",
+    "message": "Message",
+    "send": "Send Message",
+    "sending": "Sending...",
+    "success": "Message sent successfully!",
+    "error": "Failed to send message. Please try again."
+  },
+  "footer": {
+    "rights": "All rights reserved",
+    "built_with": "Built with Next.js and Django"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "retry": "Try Again",
+    "close": "Close",
+    "open": "Open",
+    "next": "Next",
+    "previous": "Previous"
+  }
+}

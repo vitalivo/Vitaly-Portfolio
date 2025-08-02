@@ -1,4 +1,5 @@
 // API Types для интеграции с Django Backend
+
 export interface ApiResponse<T> {
   results: T[]
   count: number
@@ -109,7 +110,15 @@ export interface Skill {
   is_active: boolean
 }
 
-// Blog Types (из Django apps/blog)
+// Blog Types (из Django apps/blog) - ИСПРАВЛЕННЫЕ
+export interface BlogAuthor {
+  id: number
+  username: string
+  first_name: string
+  last_name: string
+  full_name: string
+}
+
 export interface BlogCategory {
   id: number
   slug: string
@@ -122,6 +131,7 @@ export interface BlogCategory {
   icon: string
   color: string
   order: number
+  posts_count: number
   is_active: boolean
 }
 
@@ -135,6 +145,7 @@ export interface BlogTag {
   description_ru: string
   description_he: string
   color: string
+  posts_count: number
   is_active: boolean
 }
 
@@ -157,12 +168,16 @@ export interface BlogPost {
   cover_image: string | null
   categories: BlogCategory[]
   tags: BlogTag[]
+  author: BlogAuthor
   read_time: number
+  reading_time: string
   is_featured: boolean
   status: "draft" | "published" | "archived"
   published_at: string
-  view_count: number
+  views_count: number
   is_active: boolean
+  created_at: string
+  updated_at: string
 }
 
 // Contact Types (из Django apps/contacts)

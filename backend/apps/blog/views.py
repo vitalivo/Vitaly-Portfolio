@@ -1,47 +1,97 @@
-from rest_framework import viewsets
-from rest_framework.decorators import action
+from rest_framework import generics, filters, viewsets, status
+from rest_framework.decorators import api_view, action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.filters import SearchFilter, OrderingFilter
+from django.db.models import Q, F, Prefetch, Sum
 from .models import Category, Tag, Post, Comment, Subscription
-from .serializers import CategorySerializer, TagSerializer, PostSerializer, CommentSerializer, SubscriptionSerializer
+from .serializers import (
+    CategorySerializer, TagSerializer, PostListSerializer,
+    PostDetailSerializer, CommentSerializer, SubscriptionSerializer
+)
+
 
 class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Category.objects.filter(is_active=True)
+    """ViewSet для категорий"""
+    queryset = Category.objects.filter(is_active=True).order_by('order')
     serializer_class = CategorySerializer
-    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['name_en', 'name_ru', 'name_he']
     ordering = ['order']
 
+
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Tag.objects.filter(is_active=True)
+    """ViewSet для тегов"""
+    queryset = Tag.objects.filter(is_active=True).order_by('name_en')
     serializer_class = TagSerializer
-    filter_backends = [SearchFilter, OrderingFilter]
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['name_en', 'name_ru', 'name_he']
     ordering = ['name_en']
 
+
 class PostViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Post.objects.filter(status='published', is_active=True)
-    serializer_class = PostSerializer
-    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['categories', 'tags', 'is_featured']
-    search_fields = ['title_en', 'title_ru', 'title_he', 'excerpt_en']
-    ordering_fields = ['published_at', 'views_count']
+    """ViewSet для постов"""
+    queryset = Post.objects.filter(status='published', is_active=True).select_related('author').prefetch_related('categories', 'tags')
+    serializer_class = PostListSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['categories__slug', 'tags__slug', 'is_featured', 'author']
+    search_fields = ['title_en', 'title_ru', 'title_he', 'excerpt_en', 'excerpt_ru', 'excerpt_he']
+    ordering_fields = ['published_at', 'views_count', 'created_at']
     ordering = ['-published_at']
+
+    def get_serializer_class(self):
+        """Используем разные сериализаторы для списка и детального просмотра"""
+        if self.action == 'retrieve':
+            return PostDetailSerializer
+        return PostListSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        """Увеличиваем счетчик просмотров при детальном просмотре"""
+        instance = self.get_object()
+        # Увеличиваем счетчик просмотров
+        Post.objects.filter(pk=instance.pk).update(views_count=F('views_count') + 1)
+        # Обновляем объект для корректного отображения
+        instance.refresh_from_db()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
 
     @action(detail=False, methods=['get'])
     def featured(self, request):
-        featured_posts = self.queryset.filter(is_featured=True)
+        """Получить рекомендуемые посты"""
+        featured_posts = self.get_queryset().filter(is_featured=True)
+        page = self.paginate_queryset(featured_posts)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        
         serializer = self.get_serializer(featured_posts, many=True)
         return Response(serializer.data)
 
+
 class CommentViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Comment.objects.filter(is_active=True, is_approved=True)
+    """ViewSet для комментариев"""
+    queryset = Comment.objects.filter(is_active=True, is_approved=True).select_related('post').prefetch_related('replies')
     serializer_class = CommentSerializer
-    filter_backends = [DjangoFilterBackend, OrderingFilter]
-    filterset_fields = ['post']
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filterset_fields = ['post', 'post__slug']
     ordering = ['-created_at']
 
+
 class SubscriptionViewSet(viewsets.ReadOnlyModelViewSet):
+    """ViewSet для подписок (только для админов)"""
     queryset = Subscription.objects.filter(is_active=True)
     serializer_class = SubscriptionSerializer
+
+
+@api_view(['GET'])
+def blog_stats(request):
+    """Статистика блога"""
+    stats = {
+        'total_posts': Post.objects.filter(status='published', is_active=True).count(),
+        'total_categories': Category.objects.filter(is_active=True).count(),
+        'total_tags': Tag.objects.filter(is_active=True).count(),
+        'featured_posts': Post.objects.filter(status='published', is_active=True, is_featured=True).count(),
+        'total_views': Post.objects.filter(status='published', is_active=True).aggregate(
+            total=Sum('views_count')
+        )['total'] or 0
+    }
+    return Response(stats)

@@ -1,0 +1,73 @@
+{
+  "navigation": {
+    "home": "בית",
+    "about": "אודות",
+    "skills": "כישורים",
+    "portfolio": "תיק עבודות",
+    "blog": "בלוג",
+    "contact": "צור קשר",
+    "resume": "קורות חיים"
+  },
+  "hero": {
+    "greeting": "שלום, אני",
+    "title": "מפתח Full Stack",
+    "subtitle": "יוצר אפליקציות ווב מודרניות עם Django ו-Next.js",
+    "cta": "צפה בעבודות שלי",
+    "contact": "צור קשר"
+  },
+  "about": {
+    "title": "אודותיי",
+    "subtitle": "מפתח נלהב עם מומחיות בטכנולוגיות ווב מודרניות"
+  },
+  "skills": {
+    "title": "כישורים וטכנולוגיות",
+    "subtitle": "טכנולוגיות שאני עובד איתן",
+    "frontend": "Frontend",
+    "backend": "Backend",
+    "database": "בסיס נתונים",
+    "tools": "כלים ואחרים"
+  },
+  "portfolio": {
+    "title": "תיק העבודות שלי",
+    "subtitle": "פרויקטים ועבודות אחרונות",
+    "viewProject": "צפה בפרויקט",
+    "viewCode": "צפה בקוד",
+    "technologies": "טכנולוגיות בשימוש"
+  },
+  "blog": {
+    "title": "בלוג ומאמרים",
+    "subtitle": "שיתוף ידע וניסיון בפיתוח ווב",
+    "readMore": "קרא עוד",
+    "readTime": "דקות קריאה",
+    "searchPlaceholder": "חפש מאמרים...",
+    "noArticles": "לא נמצאו מאמרים",
+    "clearFilters": "נקה מסננים",
+    "allCategories": "כל הקטגוריות",
+    "featured": "מומלצים",
+    "loadingArticles": "טוען מאמרים...",
+    "errorLoading": "שגיאה בטעינת מאמרים",
+    "tryAgain": "נסה שוב",
+    "showAllArticles": "הצג את כל המאמרים",
+    "articlesFromApi": "מאמרים מ-Django API"
+  },
+  "contact": {
+    "title": "צור קשר",
+    "subtitle": "בואו נדבר על הפרויקט הבא שלכם",
+    "name": "שם",
+    "email": "אימייל",
+    "subject": "נושא",
+    "message": "הודעה",
+    "send": "שלח הודעה",
+    "success": "ההודעה נשלחה בהצלחה!",
+    "error": "שליחת ההודעה נכשלה. אנא נסה שוב."
+  },
+  "common": {
+    "loading": "טוען...",
+    "error": "משהו השתבש",
+    "retry": "נסה שוב",
+    "close": "סגור",
+    "open": "פתח",
+    "next": "הבא",
+    "previous": "הקודם"
+  }
+}

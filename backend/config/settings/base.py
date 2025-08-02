@@ -170,6 +170,16 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_ALL_ORIGINS = DEBUG
+
+# 🔧 CSRF НАСТРОЙКИ
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+]
+
+CSRF_COOKIE_SECURE = False
+CSRF_COOKIE_HTTPONLY = False
 
 # API Documentation
 SPECTACULAR_SETTINGS = {
@@ -179,13 +189,24 @@ SPECTACULAR_SETTINGS = {
     'SERVE_INCLUDE_SCHEMA': False,
 }
 
-# Email Configuration
-EMAIL_BACKEND = config('EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
-EMAIL_HOST = config('EMAIL_HOST', default='')
-EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
-EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
-EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
+# 🔧 EMAIL НАСТРОЙКИ (Gmail SMTP)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+
+EMAIL_HOST_USER = config('GMAIL_USER', default='vitalivo@gmail.com')
+EMAIL_HOST_PASSWORD = config('GMAIL_APP_PASSWORD', default='avsx tsjl brds cmlf')
+
+# 🔧 GMAIL НАСТРОЙКИ (для utils.py)
+GMAIL_USER = config('GMAIL_USER', default='vitalivo@gmail.com')
+GMAIL_APP_PASSWORD = config('GMAIL_APP_PASSWORD', default='avsx tsjl brds cmlf')
+
+# 🔧 RESEND API (резерв)
+RESEND_API_KEY = config('RESEND_API_KEY', default='re_XD4M64CE_G3U51vTindYeXuVN4XdaRuds')
+
+# 🔧 TELEGRAM BOT НАСТРОЙКИ
+TELEGRAM_BOT_TOKEN = config('TELEGRAM_BOT_TOKEN', default='8447589158:AAF23a8ZvDBkZYLdfOL4t2p6j8AEsW9_ZKA')
+TELEGRAM_CHAT_ID = config('TELEGRAM_CHAT_ID', default='769259836')
 
 # Celery Configuration
 CELERY_BROKER_URL = config('REDIS_URL', default='redis://localhost:6379/0')
