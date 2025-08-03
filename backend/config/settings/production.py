@@ -68,8 +68,8 @@ SECRET_KEY = config('SECRET_KEY')
 
 # ✅ ДОМЕНЫ (обновим после развертывания)
 ALLOWED_HOSTS = [
+    'vitaly-portfolio-backend.railway.app',
     'vitalyportfolio-api.railway.app',
-    'vitalyportfolio-api-production.up.railway.app',
     'vitalyportfolio.vercel.app',
     '.vercel.app',
     '.railway.app',
@@ -90,8 +90,7 @@ CORS_ALLOW_CREDENTIALS = True
 CSRF_TRUSTED_ORIGINS = [
     "https://vitalyportfolio.vercel.app",
     "https://vitaly-portfolio-frontend.vercel.app",
-    "https://vitalyportfolio-api.railway.app",
-    "https://vitalyportfolio-api-production.up.railway.app",
+    "https://vitaly-portfolio-backend.railway.app",
 ]
 
 # ✅ БАЗА ДАННЫХ (Railway PostgreSQL)
@@ -122,24 +121,6 @@ CSRF_COOKIE_SECURE = True
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
-SECURE_HSTS_SECONDS = 31536000
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
-
-# ✅ КЭШИРОВАНИЕ (Redis)
-CACHES = {
-    'default': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': config('REDIS_URL', default='redis://localhost:6379/1'),
-        'OPTIONS': {
-            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-        }
-    }
-}
-
-# ✅ СЕССИИ В REDIS
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
-SESSION_CACHE_ALIAS = 'default'
 
 # ✅ ЛОГИРОВАНИЕ
 LOGGING = {
@@ -150,10 +131,6 @@ LOGGING = {
             'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
             'style': '{',
         },
-        'simple': {
-            'format': '{levelname} {message}',
-            'style': '{',
-        },
     },
     'handlers': {
         'console': {
@@ -161,57 +138,9 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'verbose',
         },
-        'file': {
-            'level': 'ERROR',
-            'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'logs' / 'django.log',
-            'formatter': 'verbose',
-        },
     },
     'root': {
         'handlers': ['console'],
         'level': 'INFO',
     },
-    'loggers': {
-        'django': {
-            'handlers': ['console', 'file'],
-            'level': 'INFO',
-            'propagate': False,
-        },
-        'apps.contacts': {
-            'handlers': ['console', 'file'],
-            'level': 'INFO',
-            'propagate': False,
-        },
-    },
 }
-
-# ✅ EMAIL (Gmail)
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = config('GMAIL_USER')
-EMAIL_HOST_PASSWORD = config('GMAIL_APP_PASSWORD')
-DEFAULT_FROM_EMAIL = f'Vitaly Portfolio <{config("GMAIL_USER")}>'
-
-# ✅ CELERY (если используется)
-CELERY_BROKER_URL = config('REDIS_URL', default='redis://localhost:6379/0')
-CELERY_RESULT_BACKEND = config('REDIS_URL', default='redis://localhost:6379/0')
-
-# ✅ SENTRY (мониторинг ошибок)
-if config('SENTRY_DSN', default=''):
-    import sentry_sdk
-    from sentry_sdk.integrations.django import DjangoIntegration
-    from sentry_sdk.integrations.redis import RedisIntegration
-    
-    sentry_sdk.init(
-        dsn=config('SENTRY_DSN'),
-        integrations=[
-            DjangoIntegration(auto_enabling_integrations=False),
-            RedisIntegration(),
-        ],
-        traces_sample_rate=0.1,
-        send_default_pii=False,
-        environment='production',
-    )
