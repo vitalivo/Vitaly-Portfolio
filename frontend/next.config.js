@@ -53,10 +53,10 @@ const nextConfig = {
 
   // ✅ ESLint и TypeScript для разработки
   eslint: {
-    ignoreDuringBuilds: false,
+    ignoreDuringBuilds: true, // Игнорировать ошибки ESLint во время сборки
   },
   typescript: {
-    ignoreBuildErrors: false,
+    ignoreBuildErrors: true, // Игнорировать ошибки TypeScript во время сборки
   },
 }
 

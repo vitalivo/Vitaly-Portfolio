@@ -2,6 +2,8 @@ import os
 from pathlib import Path
 from decouple import config
 from decouple import config as env
+import dj_database_url  # ✅ ДОБАВЛЯЕМ для Docker
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
@@ -76,17 +78,27 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-# Database
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DB_NAME', default='vitaly_portfolio'),
-        'USER': config('DB_USER', default='postgres'),
-        'PASSWORD': config('DB_PASSWORD', default='postgres'),
-        'HOST': config('DB_HOST', default='localhost'),
-        'PORT': config('DB_PORT', default='5432'),
+# ✅ Database (поддержка Docker + ваши настройки)
+if config('DATABASE_URL', default=''):
+    # Docker PostgreSQL
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=config('DATABASE_URL'),
+            conn_max_age=600,
+        )
     }
-}
+else:
+    # Ваши локальные настройки
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': config('DB_NAME', default='vitaly_portfolio'),
+            'USER': config('DB_USER', default='postgres'),
+            'PASSWORD': config('DB_PASSWORD', default='postgres'),
+            'HOST': config('DB_HOST', default='localhost'),
+            'PORT': config('DB_PORT', default='5432'),
+        }
+    }
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -163,12 +175,12 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': True,
 }
 
-# CORS Settings
+# ✅ CORS Settings (добавляем Docker поддержку)
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
+    "http://frontend:3000",  # для Docker
 ]
-
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_ALL_ORIGINS = DEBUG
 
@@ -176,8 +188,8 @@ CORS_ALLOW_ALL_ORIGINS = DEBUG
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
+    "http://frontend:3000",  # для Docker
 ]
-
 CSRF_COOKIE_SECURE = False
 CSRF_COOKIE_HTTPONLY = False
 
@@ -193,7 +205,6 @@ SPECTACULAR_SETTINGS = {
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-
 EMAIL_HOST_USER = config('GMAIL_USER', default='vitalivo@gmail.com')
 EMAIL_HOST_PASSWORD = config('GMAIL_APP_PASSWORD', default='avsx tsjl brds cmlf')
 
@@ -205,7 +216,7 @@ GMAIL_APP_PASSWORD = config('GMAIL_APP_PASSWORD', default='avsx tsjl brds cmlf')
 RESEND_API_KEY = config('RESEND_API_KEY', default='re_XD4M64CE_G3U51vTindYeXuVN4XdaRuds')
 
 # 🔧 TELEGRAM BOT НАСТРОЙКИ
-TELEGRAM_BOT_TOKEN = config('TELEGRAM_BOT_TOKEN', default='8447589158:AAF23a8ZvDBkZYLdfOL4t2p6j8AEsW9_ZKA')
+TELEGRAM_BOT_TOKEN = config('TELEGRAM_BOT_TOKEN')
 TELEGRAM_CHAT_ID = config('TELEGRAM_CHAT_ID', default='769259836')
 
 # Celery Configuration
@@ -216,9 +227,6 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = TIME_ZONE
 
-# В конец файла добавь:
-
-# Email настройки
 # Email настройки
 DEFAULT_FROM_EMAIL = 'noreply@vitalyportfolio.com'
 ADMIN_EMAIL = 'admin@vitalyportfolio.com'
