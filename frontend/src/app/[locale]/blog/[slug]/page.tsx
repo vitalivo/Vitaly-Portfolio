@@ -1,7 +1,14 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { Calendar, Clock, Eye, User, ArrowLeft } from 'lucide-react'
+import { Calendar, Clock, Eye, User, ArrowLeft, Heart, MessageCircle, Share2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Label } from '@/components/ui/label'
+import CommentSection from './components/CommentSection'
+import LikeButton from './components/LikeButton'
+import SubscribeForm from './components/SubscribeForm'
 
 interface BlogPost {
   id: number
@@ -14,6 +21,7 @@ interface BlogPost {
   content_he: string
   published_at: string
   read_time: number
+  allow_comments: boolean
   tags: Array<{
     id: number
     name_en: string
@@ -34,6 +42,8 @@ interface BlogPost {
     last_name: string
   }
   views_count: number
+  likes_count?: number
+  comments_count?: number
 }
 
 async function getBlogPost(slug: string): Promise<BlogPost | null> {
@@ -88,87 +98,143 @@ export default async function BlogPostPage({
           </nav>
         </div>
 
-        <article className="max-w-4xl mx-auto">
-          {/* Article Header */}
-          <header className="mb-8">
-            <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-              <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-8">
-                <h1 className="text-4xl font-bold mb-4">{title}</h1>
-                
-                {/* Meta Info */}
-                <div className="flex flex-wrap items-center gap-4 text-blue-100">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4" />
-                    <span>{new Date(post.published_at).toLocaleDateString()}</span>
+        <div className="grid lg:grid-cols-4 gap-8">
+          {/* Main Content */}
+          <div className="lg:col-span-3">
+            <article className="max-w-4xl">
+              {/* Article Header */}
+              <header className="mb-8">
+                <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+                  <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-8">
+                    <h1 className="text-4xl font-bold mb-4">{title}</h1>
+                    
+                    {/* Meta Info */}
+                    <div className="flex flex-wrap items-center gap-4 text-blue-100">
+                      <div className="flex items-center gap-2">
+                        <Calendar className="h-4 w-4" />
+                        <span>{new Date(post.published_at).toLocaleDateString()}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Clock className="h-4 w-4" />
+                        <span>{post.read_time} min read</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Eye className="h-4 w-4" />
+                        <span>{post.views_count} views</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <User className="h-4 w-4" />
+                        <span>{post.author.username}</span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Clock className="h-4 w-4" />
-                    <span>{post.read_time} min read</span>
+
+                  {/* Categories */}
+                  <div className="p-6 border-b bg-gray-50">
+                    <div className="flex flex-wrap gap-2">
+                      {post.categories.map(category => (
+                        <span 
+                          key={category.id}
+                          className="px-3 py-1 rounded-full text-sm font-medium text-white"
+                          style={{ backgroundColor: category.color }}
+                        >
+                          {getLocalizedText(category, 'name')}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Eye className="h-4 w-4" />
-                    <span>{post.views_count} views</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <User className="h-4 w-4" />
-                    <span>{post.author.username}</span>
-                  </div>
+                </div>
+              </header>
+
+              {/* Article Content */}
+              <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
+                <div className="prose prose-lg max-w-none">
+                  <div 
+                    className="text-gray-700 leading-relaxed whitespace-pre-line"
+                    dangerouslySetInnerHTML={{ __html: content.replace(/\n/g, '<br>') }}
+                  />
                 </div>
               </div>
 
-              {/* Categories */}
-              <div className="p-6 border-b bg-gray-50">
+              {/* Interaction Bar */}
+              <div className="bg-white rounded-2xl shadow-xl p-6 mb-8">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <LikeButton postId={post.id} initialLikes={post.likes_count || 0} />
+                    <div className="flex items-center gap-2 text-gray-600">
+                      <MessageCircle className="h-5 w-5" />
+                      <span>{post.comments_count || 0} comments</span>
+                    </div>
+                  </div>
+                  <Button variant="outline" size="sm" className="flex items-center gap-2">
+                    <Share2 className="h-4 w-4" />
+                    Share
+                  </Button>
+                </div>
+              </div>
+
+              {/* Tags */}
+              <div className="bg-white rounded-2xl shadow-xl p-6 mb-8">
+                <h3 className="text-lg font-semibold mb-3">Tags:</h3>
                 <div className="flex flex-wrap gap-2">
-                  {post.categories.map(category => (
+                  {post.tags.map(tag => (
                     <span 
-                      key={category.id}
+                      key={tag.id}
                       className="px-3 py-1 rounded-full text-sm font-medium text-white"
-                      style={{ backgroundColor: category.color }}
+                      style={{ backgroundColor: tag.color }}
                     >
-                      {getLocalizedText(category, 'name')}
+                      {getLocalizedText(tag, 'name')}
                     </span>
                   ))}
                 </div>
               </div>
-            </div>
-          </header>
 
-          {/* Article Content */}
-          <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
-            <div className="prose prose-lg max-w-none">
-              <div 
-                className="text-gray-700 leading-relaxed whitespace-pre-line"
-                dangerouslySetInnerHTML={{ __html: content.replace(/\n/g, '<br>') }}
-              />
-            </div>
+              {/* Comments Section */}
+              {post.allow_comments && (
+                <CommentSection postId={post.id} postSlug={post.slug} />
+              )}
+
+              {/* Back to Blog */}
+              <div className="text-center mt-8">
+                <Button asChild className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700">
+                  <Link href="/#blog" className="flex items-center gap-2">
+                    <ArrowLeft className="h-4 w-4" />
+                    Back to All Posts
+                  </Link>
+                </Button>
+              </div>
+            </article>
           </div>
 
-          {/* Tags */}
-          <div className="bg-white rounded-2xl shadow-xl p-6 mb-8">
-            <h3 className="text-lg font-semibold mb-3">Tags:</h3>
-            <div className="flex flex-wrap gap-2">
-              {post.tags.map(tag => (
-                <span 
-                  key={tag.id}
-                  className="px-3 py-1 rounded-full text-sm font-medium text-white"
-                  style={{ backgroundColor: tag.color }}
-                >
-                  {getLocalizedText(tag, 'name')}
-                </span>
-              ))}
+          {/* Sidebar */}
+          <div className="lg:col-span-1">
+            <div className="sticky top-24 space-y-6">
+              {/* Subscribe Form */}
+              <SubscribeForm />
+              
+              {/* Author Info */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">About Author</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
+                      <span className="text-white font-bold">{post.author.username[0].toUpperCase()}</span>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold">{post.author.username}</h4>
+                      <p className="text-sm text-gray-600">Full Stack Developer</p>
+                    </div>
+                  </div>
+                  <p className="text-sm text-gray-600">
+                    Passionate developer creating modern web applications with Django and Next.js.
+                  </p>
+                </CardContent>
+              </Card>
             </div>
           </div>
-
-          {/* Back to Blog */}
-          <div className="text-center">
-            <Button asChild className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700">
-              <Link href="/#blog" className="flex items-center gap-2">
-                <ArrowLeft className="h-4 w-4" />
-                Back to All Posts
-              </Link>
-            </Button>
-          </div>
-        </article>
+        </div>
       </div>
     </div>
   )

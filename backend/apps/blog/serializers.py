@@ -81,13 +81,17 @@ class PostDetailSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     """Сериализатор для комментариев"""
     replies = serializers.SerializerMethodField()
+    post = serializers.PrimaryKeyRelatedField(queryset=Post.objects.all(), write_only=True)  # ✅ ДОБАВЛЕНО
     
     class Meta:
         model = Comment
         fields = [
-            'id', 'author_name', 'author_email', 'author_website',
+            'id', 'post', 'author_name', 'author_email', 'author_website',  # ✅ Добавлено 'post'
             'content', 'created_at', 'parent', 'replies'
         ]
+        extra_kwargs = {
+            'post': {'write_only': True},  # Только для записи, не показываем в ответе
+        }
     
     def get_replies(self, obj):
         if obj.replies.exists():

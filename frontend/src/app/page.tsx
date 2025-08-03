@@ -1,7 +1,7 @@
 "use client"
 import type React from "react"
-import { useState } from "react"
-import { useRouter } from "next/navigation" // ДОБАВЛЕН ИМПОРТ
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -25,6 +25,7 @@ import {
   Download,
   Code,
   Terminal,
+  Loader2,
 } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
@@ -32,6 +33,46 @@ import { toast } from "sonner"
 import { Toaster } from "@/components/ui/sonner"
 
 type Locale = "en" | "ru" | "he"
+
+// ✅ ТИПЫ ДЛЯ API ДАННЫХ
+interface BlogPost {
+  id: number
+  slug: string
+  title_en: string
+  title_ru: string
+  title_he: string
+  subtitle_en?: string
+  subtitle_ru?: string
+  subtitle_he?: string
+  excerpt_en: string
+  excerpt_ru: string
+  excerpt_he: string
+  content_en: string
+  content_ru: string
+  content_he: string
+  published_at: string
+  read_time: number
+  views_count: number
+  is_featured: boolean
+  thumbnail?: string
+  cover_image?: string
+  categories: Array<{
+    id: number
+    name: string
+    slug: string
+  }>
+  tags: Array<{
+    id: number
+    name: string
+    slug: string
+  }>
+  author: {
+    id: number
+    username: string
+    first_name: string
+    last_name: string
+  }
+}
 
 const messages = {
   en: {
@@ -72,6 +113,9 @@ const messages = {
       subtitle: "Thoughts and insights on web development",
       readMore: "Read More",
       readTime: "min read",
+      loading: "Loading articles...",
+      error: "Failed to load articles",
+      noArticles: "No articles found",
     },
     contact: {
       title: "Get In Touch",
@@ -136,6 +180,9 @@ const messages = {
       subtitle: "Мысли и идеи о веб-разработке",
       readMore: "Читать далее",
       readTime: "мин чтения",
+      loading: "Загрузка статей...",
+      error: "Не удалось загрузить статьи",
+      noArticles: "Статьи не найдены",
     },
     contact: {
       title: "Связаться со мной",
@@ -195,7 +242,15 @@ const messages = {
       viewCode: "צפה בקוד",
       technologies: "טכנולוגיות בשימוש",
     },
-    blog: { title: "בלוג", subtitle: "מחשבות ותובנות על פיתוח ווב", readMore: "קרא עוד", readTime: "דקות קריאה" },
+    blog: {
+      title: "בלוג",
+      subtitle: "מחשבות ותובנות על פיתוח ווב",
+      readMore: "קרא עוד",
+      readTime: "דקות קריאה",
+      loading: "טוען מאמרים...",
+      error: "נכשל בטעינת מאמרים",
+      noArticles: "לא נמצאו מאמרים",
+    },
     contact: {
       title: "צור קשר",
       subtitle: "בואו נדבר על הפרויקט הבא שלכם",
@@ -227,50 +282,6 @@ const languages = [
   { code: "en" as Locale, name: "English", flag: "🇺🇸" },
   { code: "ru" as Locale, name: "Русский", flag: "🇷🇺" },
   { code: "he" as Locale, name: "עברית", flag: "🇮🇱" },
-]
-
-// ОБНОВЛЕННЫЕ ДАННЫЕ БЛОГА С НОВЫМИ SLUG'АМИ ИЗ DJANGO
-const blogPosts = [
-  {
-    title: "Building a Professional Insurance Platform",
-    excerpt:
-      "Learn how I built a comprehensive insurance platform with modern UI/UX design, responsive layout, and professional functionality.",
-    date: "Jul 29, 2025",
-    readTime: 8,
-    tags: ["HTML", "CSS", "JavaScript", "Bootstrap"],
-    slug: "building-a-professional-insurance-platform", // НОВЫЙ SLUG ИЗ DJANGO
-    category: "Frontend",
-  },
-  {
-    title: "Building a News Portal with Django REST API",
-    excerpt:
-      "Complete walkthrough of building a comprehensive news portal with Django backend, REST API, multilingual support, and admin interface.",
-    date: "Jul 30, 2025",
-    readTime: 12,
-    tags: ["Django", "Python", "REST API", "Database"],
-    slug: "building-a-news-portal-with-django-rest-api", // НОВЫЙ SLUG ИЗ DJANGO
-    category: "Backend",
-  },
-  {
-    title: "React Kanban Board: From Concept to Production",
-    excerpt:
-      "Complete walkthrough of building an interactive task management application with drag-and-drop functionality using React and TypeScript.",
-    date: "Jul 31, 2025",
-    readTime: 15,
-    tags: ["React", "TypeScript", "JavaScript"],
-    slug: "react-kanban-board-from-concept-to-production", // НОВЫЙ SLUG ИЗ DJANGO
-    category: "Frontend",
-  },
-  {
-    title: "Enterprise Equipment Management with Django",
-    excerpt:
-      "How I built the Silant forklift management system for industrial equipment tracking and maintenance with Django and React.",
-    date: "Aug 1, 2025",
-    readTime: 18,
-    tags: ["Django", "Python", "React", "Database"],
-    slug: "enterprise-equipment-management-with-django", // НОВЫЙ SLUG ИЗ DJANGO
-    category: "Full Stack",
-  },
 ]
 
 // Остальной код остается тот же...
@@ -655,7 +666,12 @@ export default function HomePage() {
   const [locale, setLocale] = useState<Locale>("en")
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const router = useRouter() // ДОБАВЛЕН ROUTER
+  const router = useRouter()
+
+  // ✅ СОСТОЯНИЕ ДЛЯ БЛОГ ПОСТОВ ИЗ API
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([])
+  const [blogLoading, setBlogLoading] = useState(true)
+  const [blogError, setBlogError] = useState<string | null>(null)
 
   const t = (key: string) => {
     const keys = key.split(".")
@@ -664,6 +680,72 @@ export default function HomePage() {
       value = value?.[k]
     }
     return value || key
+  }
+
+  // ✅ ФУНКЦИЯ ДЛЯ ЗАГРУЗКИ ПОСТОВ ИЗ DJANGO API
+  const fetchBlogPosts = async () => {
+    try {
+      setBlogLoading(true)
+      setBlogError(null)
+
+      console.log("🔄 Fetching blog posts from Django API...")
+
+      const response = await fetch("http://127.0.0.1:8000/api/blog/posts/", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const data = await response.json()
+      console.log("✅ Blog posts loaded:", data)
+
+      // ✅ ИСПРАВЛЕНИЕ: Django REST возвращает {results: [...]}
+      const posts = data.results || data // Поддерживаем оба формата
+      const publishedPosts = posts.filter((post: BlogPost) => post.published_at)
+      setBlogPosts(publishedPosts)
+    } catch (error) {
+      console.error("❌ Error fetching blog posts:", error)
+      setBlogError(error instanceof Error ? error.message : "Unknown error")
+    } finally {
+      setBlogLoading(false)
+    }
+  }
+
+  // ✅ ЗАГРУЖАЕМ ПОСТЫ ПРИ МОНТИРОВАНИИ КОМПОНЕНТА
+  useEffect(() => {
+    fetchBlogPosts()
+  }, [])
+
+  // ✅ ФУНКЦИЯ ДЛЯ ПОЛУЧЕНИЯ ПЕРЕВЕДЕННОГО ПОСТА
+  const getLocalizedPost = (post: BlogPost) => {
+    const titleKey = `title_${locale}` as keyof BlogPost
+    const excerptKey = `excerpt_${locale}` as keyof BlogPost
+    const subtitleKey = `subtitle_${locale}` as keyof BlogPost
+
+    return {
+      id: post.id,
+      slug: post.slug,
+      title: (post[titleKey] as string) || post.title_en,
+      excerpt: (post[excerptKey] as string) || post.excerpt_en,
+      subtitle: (post[subtitleKey] as string) || post.subtitle_en,
+      date: new Date(post.published_at).toLocaleDateString(
+        locale === "en" ? "en-US" : locale === "ru" ? "ru-RU" : "he-IL",
+      ),
+      readTime: post.read_time,
+      views: post.views_count,
+      featured: post.is_featured,
+      thumbnail: post.thumbnail,
+      cover: post.cover_image,
+      categories: post.categories,
+      tags: post.tags,
+      author: post.author,
+    }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -1018,7 +1100,6 @@ export default function HomePage() {
                           project.image ||
                           "/placeholder.svg?height=200&width=300&text=" + encodeURIComponent(project.title) ||
                           "/placeholder.svg" ||
-                          "/placeholder.svg" ||
                           "/placeholder.svg"
                         }
                         alt={project.title}
@@ -1218,7 +1299,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Blog - ВСЕ 4 СТАТЬИ С НОВЫМИ SLUG'АМИ ИЗ DJANGO */}
+      {/* ✅ БЛОГ С ДАННЫМИ ИЗ DJANGO API */}
       <section
         id="blog"
         className="py-20 bg-gradient-to-br from-yellow-50 via-orange-50 to-red-50 dark:from-yellow-950 dark:via-orange-950 dark:to-red-950"
@@ -1229,69 +1310,164 @@ export default function HomePage() {
               {t("blog.title")}
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">{t("blog.subtitle")}</p>
-            <p className="text-sm text-muted-foreground mt-2">
-              Showing all {blogPosts.length} articles from Django API
-            </p>
+            {blogLoading && (
+              <p className="text-sm text-muted-foreground mt-2 flex items-center justify-center gap-2">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                {t("blog.loading")}
+              </p>
+            )}
+            {!blogLoading && !blogError && (
+              <p className="text-sm text-muted-foreground mt-2">Showing {blogPosts.length} articles from Django API</p>
+            )}
+            {blogError && (
+              <p className="text-sm text-red-500 mt-2">
+                {t("blog.error")}: {blogError}
+              </p>
+            )}
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {blogPosts.map((post, index) => {
-              const gradients = [
-                "from-yellow-400 to-orange-500",
-                "from-pink-400 to-red-500",
-                "from-purple-400 to-indigo-500",
-              ]
-              return (
-                <Card
-                  key={index}
-                  className="h-full hover:shadow-2xl transition-all duration-300 hover:scale-105 border-0 shadow-xl bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm cursor-pointer group"
-                  onClick={(e) => handleBlogPostClick(post, e)}
-                >
-                  <CardHeader>
-                    <div
-                      className={`aspect-video bg-gradient-to-br ${gradients[index % gradients.length]} rounded-lg mb-4 flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-300`}
-                    >
-                      <span className="text-6xl text-white">📝</span>
-                    </div>
-                    <CardTitle className="text-xl text-orange-700 dark:text-orange-300 line-clamp-2 group-hover:text-orange-800 transition-colors">
-                      {post.title}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground mb-4 line-clamp-3">{post.excerpt}</p>
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
-                      <div className="flex items-center gap-1 bg-blue-100 dark:bg-blue-900 px-2 py-1 rounded-full">
-                        <Calendar className="h-4 w-4 text-blue-600" />
-                        <span className="text-blue-700 dark:text-blue-300">{post.date}</span>
-                      </div>
-                      <div className="flex items-center gap-1 bg-green-100 dark:bg-green-900 px-2 py-1 rounded-full">
-                        <Clock className="h-4 w-4 text-green-600" />
-                        <span className="text-green-700 dark:text-green-300">
-                          {post.readTime} {t("blog.readTime")}
+
+          {/* ✅ СОСТОЯНИЯ ЗАГРУЗКИ */}
+          {blogLoading && (
+            <div className="flex justify-center items-center py-20">
+              <Loader2 className="h-8 w-8 animate-spin text-orange-500" />
+            </div>
+          )}
+
+          {blogError && <div className="text-center py-20"></div>}
+
+          {blogError && (
+            <div className="text-center py-20">
+              <div className="bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-lg p-6 max-w-md mx-auto">
+                <p className="text-red-600 dark:text-red-400 mb-4">{t("blog.error")}</p>
+                <Button onClick={fetchBlogPosts} className="bg-red-500 hover:bg-red-600 text-white">
+                  Try Again
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {!blogLoading && !blogError && blogPosts.length === 0 && (
+            <div className="text-center py-20">
+              <p className="text-muted-foreground text-lg">{t("blog.noArticles")}</p>
+            </div>
+          )}
+
+          {!blogLoading && !blogError && blogPosts.length > 0 && (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {blogPosts.map((post, index) => {
+                const localizedPost = getLocalizedPost(post)
+                const gradients = [
+                  "from-yellow-400 to-orange-500",
+                  "from-pink-400 to-red-500",
+                  "from-purple-400 to-indigo-500",
+                ]
+                return (
+                  <Card
+                    key={post.id}
+                    className="h-full hover:shadow-2xl transition-all duration-300 hover:scale-105 border-0 shadow-xl bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm cursor-pointer group"
+                    onClick={(e) => handleBlogPostClick(localizedPost, e)}
+                  >
+                    <CardHeader>
+                      <div
+                        className={`aspect-video bg-gradient-to-br ${gradients[index % gradients.length]} rounded-lg mb-4 flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-300 overflow-hidden relative`}
+                      >
+                        {localizedPost.thumbnail || localizedPost.cover ? (
+                          <img
+                            src={localizedPost.thumbnail || localizedPost.cover}
+                            alt={localizedPost.title}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              e.currentTarget.style.display = "none"
+                              e.currentTarget.nextElementSibling!.style.display = "flex"
+                            }}
+                          />
+                        ) : null}
+                        <span
+                          className={`text-6xl text-white ${localizedPost.thumbnail || localizedPost.cover ? "hidden" : ""}`}
+                        >
+                          📝
                         </span>
+
+                        {/* Featured badge */}
+                        {localizedPost.featured && (
+                          <div className="absolute top-2 left-2 bg-yellow-500 text-black px-2 py-1 rounded-full text-xs font-bold">
+                            ⭐ Featured
+                          </div>
+                        )}
+
+                        {/* Views count */}
+                        <div className="absolute top-2 right-2 bg-black/70 text-white px-2 py-1 rounded-full text-xs">
+                          {localizedPost.views} views
+                        </div>
                       </div>
-                    </div>
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {post.tags.map((tag, tagIndex) => {
-                        const tagColors = [
-                          "bg-red-100 text-red-800",
-                          "bg-yellow-100 text-yellow-800",
-                          "bg-indigo-100 text-indigo-800",
-                        ]
-                        return (
-                          <Badge key={tag} className={`${tagColors[tagIndex % tagColors.length]} border-0`}>
-                            {tag}
-                          </Badge>
-                        )
-                      })}
-                    </div>
-                    <Button className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white border-0 shadow-lg group-hover:shadow-xl transition-shadow">
-                      {t("blog.readMore")}
-                    </Button>
-                  </CardContent>
-                </Card>
-              )
-            })}
-          </div>
+                      <CardTitle className="text-xl text-orange-700 dark:text-orange-300 line-clamp-2 group-hover:text-orange-800 transition-colors">
+                        {localizedPost.title}
+                      </CardTitle>
+                      {localizedPost.subtitle && (
+                        <p className="text-sm text-muted-foreground line-clamp-1">{localizedPost.subtitle}</p>
+                      )}
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-muted-foreground mb-4 line-clamp-3">{localizedPost.excerpt}</p>
+                      <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
+                        <div className="flex items-center gap-1 bg-blue-100 dark:bg-blue-900 px-2 py-1 rounded-full">
+                          <Calendar className="h-4 w-4 text-blue-600" />
+                          <span className="text-blue-700 dark:text-blue-300">{localizedPost.date}</span>
+                        </div>
+                        <div className="flex items-center gap-1 bg-green-100 dark:bg-green-900 px-2 py-1 rounded-full">
+                          <Clock className="h-4 w-4 text-green-600" />
+                          <span className="text-green-700 dark:text-green-300">
+                            {localizedPost.readTime} {t("blog.readTime")}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Categories */}
+                      {localizedPost.categories.length > 0 && (
+                        <div className="flex flex-wrap gap-2 mb-4">
+                          {localizedPost.categories.map((category) => (
+                            <Badge key={category.id} className="bg-purple-100 text-purple-800 border-0 text-xs">
+                              {category.name}
+                            </Badge>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Tags */}
+                      {localizedPost.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-2 mb-4">
+                          {localizedPost.tags.slice(0, 3).map((tag, tagIndex) => {
+                            const tagColors = [
+                              "bg-red-100 text-red-800",
+                              "bg-yellow-100 text-yellow-800",
+                              "bg-indigo-100 text-indigo-800",
+                            ]
+                            return (
+                              <Badge
+                                key={tag.id}
+                                className={`${tagColors[tagIndex % tagColors.length]} border-0 text-xs`}
+                              >
+                                {tag.name}
+                              </Badge>
+                            )
+                          })}
+                          {localizedPost.tags.length > 3 && (
+                            <Badge className="bg-gray-100 text-gray-800 border-0 text-xs">
+                              +{localizedPost.tags.length - 3}
+                            </Badge>
+                          )}
+                        </div>
+                      )}
+
+                      <Button className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white border-0 shadow-lg group-hover:shadow-xl transition-shadow">
+                        {t("blog.readMore")}
+                      </Button>
+                    </CardContent>
+                  </Card>
+                )
+              })}
+            </div>
+          )}
         </div>
       </section>
 
