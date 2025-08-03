@@ -1,7 +1,7 @@
 "use client"
-
 import type React from "react"
 import { useState } from "react"
+import { useRouter } from "next/navigation" // ДОБАВЛЕН ИМПОРТ
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -229,7 +229,51 @@ const languages = [
   { code: "he" as Locale, name: "עברית", flag: "🇮🇱" },
 ]
 
-// 🎯 ВСЕ 11 РЕАЛЬНЫХ ПРОЕКТОВ ВИТАЛИЯ (из твоего файла)
+// ОБНОВЛЕННЫЕ ДАННЫЕ БЛОГА С НОВЫМИ SLUG'АМИ ИЗ DJANGO
+const blogPosts = [
+  {
+    title: "Building a Professional Insurance Platform",
+    excerpt:
+      "Learn how I built a comprehensive insurance platform with modern UI/UX design, responsive layout, and professional functionality.",
+    date: "Jul 29, 2025",
+    readTime: 8,
+    tags: ["HTML", "CSS", "JavaScript", "Bootstrap"],
+    slug: "building-a-professional-insurance-platform", // НОВЫЙ SLUG ИЗ DJANGO
+    category: "Frontend",
+  },
+  {
+    title: "Building a News Portal with Django REST API",
+    excerpt:
+      "Complete walkthrough of building a comprehensive news portal with Django backend, REST API, multilingual support, and admin interface.",
+    date: "Jul 30, 2025",
+    readTime: 12,
+    tags: ["Django", "Python", "REST API", "Database"],
+    slug: "building-a-news-portal-with-django-rest-api", // НОВЫЙ SLUG ИЗ DJANGO
+    category: "Backend",
+  },
+  {
+    title: "React Kanban Board: From Concept to Production",
+    excerpt:
+      "Complete walkthrough of building an interactive task management application with drag-and-drop functionality using React and TypeScript.",
+    date: "Jul 31, 2025",
+    readTime: 15,
+    tags: ["React", "TypeScript", "JavaScript"],
+    slug: "react-kanban-board-from-concept-to-production", // НОВЫЙ SLUG ИЗ DJANGO
+    category: "Frontend",
+  },
+  {
+    title: "Enterprise Equipment Management with Django",
+    excerpt:
+      "How I built the Silant forklift management system for industrial equipment tracking and maintenance with Django and React.",
+    date: "Aug 1, 2025",
+    readTime: 18,
+    tags: ["Django", "Python", "React", "Database"],
+    slug: "enterprise-equipment-management-with-django", // НОВЫЙ SLUG ИЗ DJANGO
+    category: "Full Stack",
+  },
+]
+
+// Остальной код остается тот же...
 const projects = [
   {
     id: 1,
@@ -437,7 +481,6 @@ const skillCategories = [
   },
 ]
 
-// 🎯 ВСЕ 15 РЕАЛЬНЫХ СЕРТИФИКАТОВ ВИТАЛИЯ (из твоего файла)
 const certificates = [
   {
     title: "Python Full Stack Web Development",
@@ -608,130 +651,11 @@ const certificates = [
   },
 ]
 
-const blogPosts = [
-  {
-    title: "Building a News Portal with Django REST API",
-    excerpt:
-      "Learn how to create a comprehensive news portal with Django, featuring REST API, multilingual support, and admin interface",
-    date: "Jan 15, 2025",
-    readTime: 12,
-    tags: ["Django", "REST API", "Python"],
-    slug: "django-news-portal-tutorial",
-    category: "Backend",
-  },
-  {
-    title: "Creating Professional Insurance Platform UI",
-    excerpt:
-      "Step-by-step guide to building a modern insurance platform with responsive design and user-friendly interface",
-    date: "Jan 10, 2025",
-    readTime: 8,
-    tags: ["HTML", "CSS", "JavaScript", "UI/UX"],
-    slug: "insurance-platform-ui-design",
-    category: "Frontend",
-  },
-  {
-    title: "React Kanban Board: From Concept to Production",
-    excerpt:
-      "Complete walkthrough of building an interactive task management application with drag-and-drop functionality using React",
-    date: "Jan 8, 2025",
-    readTime: 15,
-    tags: ["React", "TypeScript", "LocalStorage"],
-    slug: "react-kanban-board-tutorial",
-    category: "Frontend",
-  },
-  {
-    title: "Enterprise Equipment Management with Django",
-    excerpt: "How I built the Silant forklift management system for industrial equipment tracking and maintenance",
-    date: "Jan 5, 2025",
-    readTime: 18,
-    tags: ["Django", "PostgreSQL", "Enterprise"],
-    slug: "silant-equipment-management-system",
-    category: "Backend",
-  },
-  {
-    title: "WebSocket Real-Time Chat Implementation",
-    excerpt:
-      "Building a real-time chat application with WebSocket API, geolocation features, and OpenStreetMap integration",
-    date: "Jan 3, 2025",
-    readTime: 10,
-    tags: ["WebSocket", "JavaScript", "Real-time"],
-    slug: "websocket-realtime-chat-tutorial",
-    category: "Frontend",
-  },
-  {
-    title: "MMORPG Community Platform Development",
-    excerpt:
-      "Creating a bulletin board system for gaming communities with email notifications and rich content management",
-    date: "Dec 30, 2024",
-    readTime: 14,
-    tags: ["Django", "Celery", "Community"],
-    slug: "mmorpg-bulletin-board-development",
-    category: "Full-Stack",
-  },
-  {
-    title: "From Beginner to Full Stack: My Learning Journey",
-    excerpt:
-      "Personal story of learning web development from Python basics to full-stack applications, including challenges and breakthroughs",
-    date: "Dec 28, 2024",
-    readTime: 6,
-    tags: ["Career", "Learning", "Python"],
-    slug: "fullstack-learning-journey",
-    category: "Career",
-  },
-  {
-    title: "Modern CSS Techniques for Responsive Design",
-    excerpt: "Advanced CSS techniques used in real projects, including Grid, Flexbox, and responsive design patterns",
-    date: "Dec 25, 2024",
-    readTime: 9,
-    tags: ["CSS", "Responsive Design", "Frontend"],
-    slug: "modern-css-responsive-techniques",
-    category: "Frontend",
-  },
-  {
-    title: "Building Scalable Django Applications",
-    excerpt: "Best practices for structuring Django projects, from small apps to enterprise-level systems like Silant",
-    date: "Dec 22, 2024",
-    readTime: 16,
-    tags: ["Django", "Architecture", "Best Practices"],
-    slug: "scalable-django-applications",
-    category: "Backend",
-  },
-  {
-    title: "Telegram Bot Development with Python",
-    excerpt:
-      "Complete guide to building intelligent Telegram bots with Python, including user management and API integration",
-    date: "Dec 20, 2024",
-    readTime: 11,
-    tags: ["Python", "Telegram Bot", "API"],
-    slug: "python-telegram-bot-guide",
-    category: "Backend",
-  },
-  {
-    title: "Portfolio Website: Django + Next.js Integration",
-    excerpt:
-      "How to build a multilingual portfolio with Django REST API backend and Next.js frontend, including deployment strategies",
-    date: "Dec 18, 2024",
-    readTime: 20,
-    tags: ["Django", "Next.js", "Full-Stack"],
-    slug: "portfolio-django-nextjs-integration",
-    category: "Full-Stack",
-  },
-  {
-    title: "Database Design for Django Applications",
-    excerpt:
-      "Designing efficient database schemas for Django projects, with examples from real enterprise applications",
-    date: "Dec 15, 2024",
-    readTime: 13,
-    tags: ["Django", "PostgreSQL", "Database"],
-    slug: "django-database-design-guide",
-    category: "Backend",
-  },
-]
-
 export default function HomePage() {
   const [locale, setLocale] = useState<Locale>("en")
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const router = useRouter() // ДОБАВЛЕН ROUTER
 
   const t = (key: string) => {
     const keys = key.split(".")
@@ -745,8 +669,6 @@ export default function HomePage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
-
-    // Попытка отправить данные на Django API
     try {
       const formData = new FormData(e.target as HTMLFormElement)
       const response = await fetch("http://127.0.0.1:8000/api/contacts/messages/", {
@@ -761,7 +683,6 @@ export default function HomePage() {
           message: formData.get("message"),
         }),
       })
-
       if (response.ok) {
         toast.success(t("contact.success"))
         ;(e.target as HTMLFormElement).reset()
@@ -772,8 +693,19 @@ export default function HomePage() {
       console.error("API Error:", error)
       toast.error(t("contact.error"))
     }
-
     setIsSubmitting(false)
+  }
+
+  // ИСПРАВЛЕННАЯ ФУНКЦИЯ ДЛЯ ПЕРЕХОДА К БЛОГ ПОСТУ
+  const handleBlogPostClick = (post: any, e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    console.log("🚀 Navigating to blog post:", post.slug, "with locale:", locale)
+
+    // ИСПОЛЬЗУЕМ NEXT.JS ROUTER ВМЕСТО window.location.href
+    const blogUrl = `/${locale}/blog/${post.slug}`
+    console.log("🔗 Blog URL:", blogUrl)
+    router.push(blogUrl)
   }
 
   const navigation = [
@@ -788,7 +720,6 @@ export default function HomePage() {
 
   const currentLanguage = languages.find((lang) => lang.code === locale)
 
-  // Фирменный логотип компонент
   const VitalyLogo = () => (
     <div className="flex items-center gap-2">
       <div className="relative">
@@ -812,7 +743,6 @@ export default function HomePage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <VitalyLogo />
-
             <nav className="hidden md:flex space-x-6">
               {navigation.map((item) => (
                 <a
@@ -824,7 +754,6 @@ export default function HomePage() {
                 </a>
               ))}
             </nav>
-
             <div className="flex items-center space-x-4">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -842,7 +771,6 @@ export default function HomePage() {
                   ))}
                 </DropdownMenuContent>
               </DropdownMenu>
-
               <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
                 <SheetTrigger asChild className="md:hidden">
                   <Button variant="ghost" size="icon">
@@ -878,7 +806,6 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="absolute top-20 left-20 w-32 h-32 bg-white/10 rounded-full blur-xl animate-pulse"></div>
         <div className="absolute bottom-20 right-20 w-48 h-48 bg-white/5 rounded-full blur-2xl animate-bounce"></div>
-
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center text-white">
             <p className="text-lg text-white/80 mb-4">{t("hero.greeting")}</p>
@@ -887,7 +814,6 @@ export default function HomePage() {
               {t("hero.title")}
             </h2>
             <p className="text-lg text-white/90 mb-8 max-w-2xl mx-auto drop-shadow-md">{t("hero.subtitle")}</p>
-
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
               <Button size="lg" className="bg-white text-purple-600 hover:bg-white/90 font-semibold shadow-xl" asChild>
                 <a href="#portfolio">{t("hero.cta")}</a>
@@ -901,7 +827,6 @@ export default function HomePage() {
                 <a href="#contact">{t("hero.contact")}</a>
               </Button>
             </div>
-
             <div className="flex justify-center space-x-6 mb-12">
               <Button
                 variant="ghost"
@@ -934,7 +859,6 @@ export default function HomePage() {
                 </a>
               </Button>
             </div>
-
             <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" asChild>
               <a href="#about">
                 <ArrowDown className="h-6 w-6 animate-bounce" />
@@ -956,7 +880,6 @@ export default function HomePage() {
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">{t("about.subtitle")}</p>
           </div>
-
           <Card className="max-w-4xl mx-auto border-0 shadow-2xl bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm">
             <CardContent className="p-8">
               <div className="grid md:grid-cols-2 gap-8 items-center">
@@ -964,7 +887,6 @@ export default function HomePage() {
                   <h3 className="text-2xl font-semibold mb-4 text-blue-600 dark:text-blue-400">{t("about.role")}</h3>
                   <p className="text-muted-foreground mb-4 leading-relaxed">{t("about.description1")}</p>
                   <p className="text-muted-foreground leading-relaxed">{t("about.description2")}</p>
-
                   {/* Обновленные статистики на основе реальных проектов */}
                   <div className="grid grid-cols-3 gap-4 mt-6">
                     <div className="text-center p-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg text-white">
@@ -981,7 +903,6 @@ export default function HomePage() {
                     </div>
                   </div>
                 </div>
-
                 <div className="flex justify-center">
                   <div className="relative">
                     {/* РЕАЛЬНАЯ ФОТОГРАФИЯ ВИТАЛИЯ */}
@@ -1023,7 +944,6 @@ export default function HomePage() {
               {t("skills.title")}
             </h2>
           </div>
-
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {skillCategories.map((category, index) => {
               const colors = [
@@ -1032,7 +952,6 @@ export default function HomePage() {
                 "from-green-500 to-green-600",
                 "from-orange-500 to-orange-600",
               ]
-
               return (
                 <Card
                   key={category.category}
@@ -1074,7 +993,6 @@ export default function HomePage() {
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">{t("portfolio.subtitle")}</p>
             <p className="text-sm text-muted-foreground mt-2">Showing all {projects.length} projects</p>
           </div>
-
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {projects.map((project, index) => {
               const gradients = [
@@ -1085,7 +1003,6 @@ export default function HomePage() {
                 "from-indigo-500 to-blue-600",
                 "from-purple-500 to-pink-600",
               ]
-
               return (
                 <Card
                   key={project.id}
@@ -1100,6 +1017,8 @@ export default function HomePage() {
                         src={
                           project.image ||
                           "/placeholder.svg?height=200&width=300&text=" + encodeURIComponent(project.title) ||
+                          "/placeholder.svg" ||
+                          "/placeholder.svg" ||
                           "/placeholder.svg"
                         }
                         alt={project.title}
@@ -1112,12 +1031,10 @@ export default function HomePage() {
                       />
                       {/* Fallback эмодзи */}
                       <span className="text-6xl text-white hidden">🚀</span>
-
                       {/* Показываем тип проекта */}
                       <div className="absolute top-2 right-2 bg-black/70 text-white px-2 py-1 rounded-full text-xs font-bold">
                         {project.type}
                       </div>
-
                       {/* Показываем статус */}
                       <div
                         className={`absolute top-2 left-2 px-2 py-1 rounded-full text-xs font-bold ${
@@ -1130,7 +1047,6 @@ export default function HomePage() {
                       >
                         {project.status}
                       </div>
-
                       {/* Показываем featured проекты */}
                       {project.featured && (
                         <div className="absolute bottom-2 left-2 bg-yellow-500 text-black px-2 py-1 rounded-full text-xs font-bold">
@@ -1143,7 +1059,6 @@ export default function HomePage() {
                   </CardHeader>
                   <CardContent>
                     <p className="text-muted-foreground mb-4">{project.description}</p>
-
                     <div className="flex flex-wrap gap-2 mb-4">
                       {project.technologies.map((tech, techIndex) => {
                         const badgeColors = [
@@ -1164,7 +1079,6 @@ export default function HomePage() {
                         )
                       })}
                     </div>
-
                     <div className="flex gap-2">
                       {project.projectUrl !== "#" && (
                         <Button
@@ -1210,7 +1124,6 @@ export default function HomePage() {
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">{t("certificates.subtitle")}</p>
             <p className="text-sm text-muted-foreground mt-2">Showing all {certificates.length} certificates</p>
           </div>
-
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {certificates.map((cert, index) => {
               const gradients = [
@@ -1218,7 +1131,6 @@ export default function HomePage() {
                 "from-blue-500 to-cyan-600",
                 "from-cyan-500 to-teal-600",
               ]
-
               return (
                 <Card
                   key={index}
@@ -1241,14 +1153,12 @@ export default function HomePage() {
                       />
                       {/* Fallback иконка */}
                       <Award className="h-16 w-16 text-white hidden" />
-
                       {/* Показываем оценку если есть */}
                       {cert.score && (
                         <div className="absolute top-2 right-2 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-bold">
                           {cert.score}
                         </div>
                       )}
-
                       {/* Показываем "с отличием" если есть */}
                       {cert.distinction && (
                         <div className="absolute top-2 left-2 bg-yellow-500 text-white px-2 py-1 rounded-full text-xs font-bold">
@@ -1270,7 +1180,6 @@ export default function HomePage() {
                         <strong>ID:</strong> {cert.credentialId}
                       </p>
                     </div>
-
                     {/* Навыки из сертификата */}
                     <div className="flex flex-wrap gap-1 mb-4">
                       {cert.skills.map((skill) => (
@@ -1279,7 +1188,6 @@ export default function HomePage() {
                         </Badge>
                       ))}
                     </div>
-
                     <div className="flex gap-2">
                       <Button
                         size="sm"
@@ -1310,7 +1218,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Blog - ВСЕ 12 СТАТЕЙ */}
+      {/* Blog - ВСЕ 4 СТАТЬИ С НОВЫМИ SLUG'АМИ ИЗ DJANGO */}
       <section
         id="blog"
         className="py-20 bg-gradient-to-br from-yellow-50 via-orange-50 to-red-50 dark:from-yellow-950 dark:via-orange-950 dark:to-red-950"
@@ -1321,9 +1229,10 @@ export default function HomePage() {
               {t("blog.title")}
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">{t("blog.subtitle")}</p>
-            <p className="text-sm text-muted-foreground mt-2">Showing all {blogPosts.length} articles</p>
+            <p className="text-sm text-muted-foreground mt-2">
+              Showing all {blogPosts.length} articles from Django API
+            </p>
           </div>
-
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {blogPosts.map((post, index) => {
               const gradients = [
@@ -1331,25 +1240,24 @@ export default function HomePage() {
                 "from-pink-400 to-red-500",
                 "from-purple-400 to-indigo-500",
               ]
-
               return (
                 <Card
                   key={index}
-                  className="h-full hover:shadow-2xl transition-all duration-300 hover:scale-105 border-0 shadow-xl bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm"
+                  className="h-full hover:shadow-2xl transition-all duration-300 hover:scale-105 border-0 shadow-xl bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm cursor-pointer group"
+                  onClick={(e) => handleBlogPostClick(post, e)}
                 >
                   <CardHeader>
                     <div
-                      className={`aspect-video bg-gradient-to-br ${gradients[index % gradients.length]} rounded-lg mb-4 flex items-center justify-center shadow-lg`}
+                      className={`aspect-video bg-gradient-to-br ${gradients[index % gradients.length]} rounded-lg mb-4 flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-300`}
                     >
                       <span className="text-6xl text-white">📝</span>
                     </div>
-                    <CardTitle className="text-xl text-orange-700 dark:text-orange-300 line-clamp-2">
+                    <CardTitle className="text-xl text-orange-700 dark:text-orange-300 line-clamp-2 group-hover:text-orange-800 transition-colors">
                       {post.title}
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <p className="text-muted-foreground mb-4 line-clamp-3">{post.excerpt}</p>
-
                     <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
                       <div className="flex items-center gap-1 bg-blue-100 dark:bg-blue-900 px-2 py-1 rounded-full">
                         <Calendar className="h-4 w-4 text-blue-600" />
@@ -1362,7 +1270,6 @@ export default function HomePage() {
                         </span>
                       </div>
                     </div>
-
                     <div className="flex flex-wrap gap-2 mb-4">
                       {post.tags.map((tag, tagIndex) => {
                         const tagColors = [
@@ -1377,8 +1284,7 @@ export default function HomePage() {
                         )
                       })}
                     </div>
-
-                    <Button className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white border-0 shadow-lg">
+                    <Button className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white border-0 shadow-lg group-hover:shadow-xl transition-shadow">
                       {t("blog.readMore")}
                     </Button>
                   </CardContent>
@@ -1401,7 +1307,6 @@ export default function HomePage() {
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">{t("contact.subtitle")}</p>
           </div>
-
           <div className="grid lg:grid-cols-2 gap-12">
             <div className="space-y-8">
               <div className="flex items-center gap-4 p-6 bg-white/80 dark:bg-gray-900/80 rounded-xl shadow-lg backdrop-blur-sm hover:shadow-xl transition-shadow">
@@ -1413,7 +1318,6 @@ export default function HomePage() {
                   <p className="text-muted-foreground">vitalivo@gmail.com</p>
                 </div>
               </div>
-
               <div className="flex items-center gap-4 p-6 bg-white/80 dark:bg-gray-900/80 rounded-xl shadow-lg backdrop-blur-sm hover:shadow-xl transition-shadow">
                 <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg">
                   <Phone className="h-8 w-8 text-white" />
@@ -1423,7 +1327,6 @@ export default function HomePage() {
                   <p className="text-muted-foreground">+972 50 645 7335</p>
                 </div>
               </div>
-
               <div className="flex items-center gap-4 p-6 bg-white/80 dark:bg-gray-900/80 rounded-xl shadow-lg backdrop-blur-sm hover:shadow-xl transition-shadow">
                 <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
                   <MapPin className="h-8 w-8 text-white" />
@@ -1434,7 +1337,6 @@ export default function HomePage() {
                 </div>
               </div>
             </div>
-
             <Card className="border-0 shadow-2xl bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm">
               <CardHeader className="bg-gradient-to-r from-teal-500 to-blue-500 text-white rounded-t-lg">
                 <CardTitle className="text-xl text-center">Send a Message</CardTitle>
@@ -1452,7 +1354,6 @@ export default function HomePage() {
                       className="border-2 border-teal-200 focus:border-teal-500 rounded-lg"
                     />
                   </div>
-
                   <div>
                     <Label htmlFor="email" className="text-teal-700 dark:text-teal-300 font-medium">
                       {t("contact.email")}
@@ -1465,7 +1366,6 @@ export default function HomePage() {
                       className="border-2 border-teal-200 focus:border-teal-500 rounded-lg"
                     />
                   </div>
-
                   <div>
                     <Label htmlFor="subject" className="text-teal-700 dark:text-teal-300 font-medium">
                       {t("contact.subject")}
@@ -1477,7 +1377,6 @@ export default function HomePage() {
                       className="border-2 border-teal-200 focus:border-teal-500 rounded-lg"
                     />
                   </div>
-
                   <div>
                     <Label htmlFor="message" className="text-teal-700 dark:text-teal-300 font-medium">
                       {t("contact.message")}
@@ -1490,7 +1389,6 @@ export default function HomePage() {
                       className="border-2 border-teal-200 focus:border-teal-500 rounded-lg"
                     />
                   </div>
-
                   <Button
                     type="submit"
                     className="w-full bg-gradient-to-r from-teal-500 to-blue-500 hover:from-teal-600 hover:to-blue-600 text-white border-0 shadow-lg text-lg py-3"
@@ -1513,7 +1411,6 @@ export default function HomePage() {
               Vitaliy
             </h3>
             <p className="text-gray-300 mb-6 text-lg">Full Stack Developer</p>
-
             <div className="flex justify-center space-x-6 mb-8">
               <Button
                 variant="ghost"
@@ -1546,14 +1443,12 @@ export default function HomePage() {
                 </a>
               </Button>
             </div>
-
             <div className="border-t border-white/20 pt-8">
               <p className="text-sm text-gray-400">© 2025 Vitaliy Voloshyn. All rights reserved.</p>
             </div>
           </div>
         </div>
       </footer>
-
       <Toaster />
     </div>
   )

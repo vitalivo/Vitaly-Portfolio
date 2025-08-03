@@ -1,63 +1,119 @@
-import { api, API_ENDPOINTS } from "@/lib/api"
-import type { ApiResponse, BlogPost, BlogCategory, BlogTag, Locale, BlogApiParams } from "@/types/api"
+import { API_BASE_URL } from "@/constants/api"
 
-export interface BlogAuthor {
+export interface BlogPost {
   id: number
-  username: string
-  first_name: string
-  last_name: string
-  full_name: string
-  email: string
-}
-
-class BlogApiService {
-  async getPosts(params: BlogApiParams = {}): Promise<ApiResponse<BlogPost>> {
-    const response = await api.get(API_ENDPOINTS.BLOG_POSTS, { params })
-    return response.data
+  title_en: string
+  title_ru: string
+  title_he: string
+  content_en: string
+  content_ru: string
+  content_he: string
+  excerpt_en: string
+  excerpt_ru: string
+  excerpt_he: string
+  slug: string
+  featured_image?: string
+  published_at: string
+  created_at: string
+  updated_at: string
+  is_active: boolean
+  status: string
+  views_count: number
+  reading_time: number
+  author?: {
+    id: number
+    first_name: string
+    last_name: string
+    avatar?: string
   }
+  categories?: Array<{
+    id: number
+    name_en: string
+    name_ru: string
+    name_he: string
+  }>
+  tags?: Array<{
+    id: number
+    name_en: string
+    name_ru: string
+    name_he: string
+  }>
+}
 
-  async getPost(slug: string): Promise<BlogPost> {
-    const response = await api.get(`${API_ENDPOINTS.BLOG_POSTS}${slug}/`)
-    return response.data
+export interface BlogPostsResponse {
+  count: number
+  next: string | null
+  previous: string | null
+  results: BlogPost[]
+}
+
+export async function getBlogPosts(): Promise<BlogPost[]> {
+  try {
+    console.log("🔍 Fetching blog posts from:", `${API_BASE_URL}/blog/posts/`)
+
+    const response = await fetch(`${API_BASE_URL}/blog/posts/`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      cache: "no-store",
+    })
+
+    console.log("📡 Response status:", response.status)
+
+    if (!response.ok) {
+      console.error("❌ HTTP error! status:", response.status)
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+
+    const data: BlogPostsResponse = await response.json()
+    console.log("✅ Blog posts fetched successfully:", data.results?.length || 0)
+
+    return data.results || []
+  } catch (error) {
+    console.error("❌ Error fetching blog posts:", error)
+    return []
   }
+}
 
-  async getFeaturedPosts(): Promise<ApiResponse<BlogPost>> {
-    const response = await api.get(API_ENDPOINTS.BLOG_POSTS_FEATURED)
-    return response.data
+export async function getBlogPost(slug: string): Promise<BlogPost | null> {
+  try {
+    console.log("🔍 Fetching blog post from:", `${API_BASE_URL}/blog/posts/${slug}/`)
+
+    const response = await fetch(`${API_BASE_URL}/blog/posts/${slug}/`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      cache: "no-store",
+    })
+
+    console.log("📡 Response status:", response.status)
+
+    if (!response.ok) {
+      console.error("❌ HTTP error! status:", response.status)
+      if (response.status === 404) {
+        console.log("❌ Blog post not found:", slug)
+        return null
+      }
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+
+    const data: BlogPost = await response.json()
+    console.log("✅ Blog post fetched successfully:", data.title_en)
+
+    return data
+  } catch (error) {
+    console.error("❌ Error fetching blog post:", error)
+    return null
   }
+}
 
-  async getCategories(): Promise<ApiResponse<BlogCategory>> {
-    const response = await api.get(API_ENDPOINTS.BLOG_CATEGORIES)
-    return response.data
+export async function getComments(): Promise<any[]> {
+  try {
+    return []
+  } catch (error) {
+    console.error("❌ Error fetching comments:", error)
+    return []
   }
-
-  async getTags(): Promise<ApiResponse<BlogTag>> {
-    const response = await api.get(API_ENDPOINTS.BLOG_TAGS)
-    return response.data
-  }
 }
-
-export const blogApi = new BlogApiService()
-
-// Утилиты для получения локализованных полей
-export const getBlogPostTitle = (post: BlogPost, locale: Locale): string => {
-  return (post[`title_${locale}` as keyof BlogPost] as string) || post.title_en
-}
-
-export const getBlogPostSubtitle = (post: BlogPost, locale: Locale): string => {
-  return (post[`subtitle_${locale}` as keyof BlogPost] as string) || post.subtitle_en || ""
-}
-
-export const getBlogPostExcerpt = (post: BlogPost, locale: Locale): string => {
-  return (post[`excerpt_${locale}` as keyof BlogPost] as string) || post.excerpt_en || ""
-}
-
-export const getBlogCategoryName = (category: BlogCategory, locale: Locale): string => {
-  return (category[`name_${locale}` as keyof BlogCategory] as string) || category.name_en
-}
-
-export const getBlogTagName = (tag: BlogTag, locale: Locale): string => {
-  return (tag[`name_${locale}` as keyof BlogTag] as string) || tag.name_en
-}
-
-export default blogApi

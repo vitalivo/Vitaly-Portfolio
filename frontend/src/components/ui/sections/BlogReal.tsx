@@ -2,15 +2,20 @@
 
 import type React from "react"
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
-import { Calendar, Clock, Search, Filter } from "lucide-react"
-import { blogApiService } from "@/services/blog-api"
-import type { BlogPost, BlogCategory, BlogTag } from "@/types/api"
-import { getLocalizedField } from "@/utils/localization"
-import type { Locale } from "@/types/api"
+import { Calendar, Clock, Search, Filter, MessageCircle, Eye } from "lucide-react"
+import {
+  blogApiService,
+  getBlogPostTitle,
+  getBlogPostExcerpt,
+  getBlogCategoryName,
+  getBlogTagName,
+} from "@/services/blog-api"
+import type { BlogPost, BlogCategory, BlogTag, Locale } from "@/types/api"
 
 interface BlogRealProps {
   locale: Locale
@@ -18,6 +23,7 @@ interface BlogRealProps {
 }
 
 export function BlogReal({ locale, t }: BlogRealProps) {
+  const router = useRouter()
   const [posts, setPosts] = useState<BlogPost[]>([])
   const [categories, setCategories] = useState<BlogCategory[]>([])
   const [tags, setTags] = useState<BlogTag[]>([])
@@ -34,7 +40,6 @@ export function BlogReal({ locale, t }: BlogRealProps) {
         setLoading(true)
         setError(null)
 
-        // Загружаем все данные параллельно
         const [postsResponse, categoriesResponse, tagsResponse] = await Promise.all([
           blogApiService.getPosts({
             category: selectedCategory || undefined,
@@ -50,14 +55,14 @@ export function BlogReal({ locale, t }: BlogRealProps) {
         setTags(tagsResponse.results)
       } catch (err) {
         console.error("Error loading blog data:", err)
-        setError(t("blog.errorLoading"))
+        setError("Failed to load blog data")
       } finally {
         setLoading(false)
       }
     }
 
     loadBlogData()
-  }, [selectedCategory, selectedTag, searchQuery, t])
+  }, [selectedCategory, selectedTag, searchQuery])
 
   // Обработка поиска
   const handleSearch = (e: React.FormEvent) => {
@@ -72,13 +77,21 @@ export function BlogReal({ locale, t }: BlogRealProps) {
     setSearchQuery("")
   }
 
+  // Переход к детальной странице поста - ИСПРАВЛЕНО!
+  const handlePostClick = (post: BlogPost, e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    console.log("Navigating to post:", post.slug) // Для отладки
+    router.push(`/${locale}/blog/${post.slug}`)
+  }
+
   if (loading) {
     return (
       <section id="blog" className="py-20 bg-gradient-to-br from-yellow-50 via-orange-50 to-red-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto"></div>
-            <p className="mt-4 text-muted-foreground">{t("blog.loadingArticles")}</p>
+            <p className="mt-4 text-muted-foreground">Loading blog posts...</p>
           </div>
         </div>
       </section>
@@ -91,7 +104,7 @@ export function BlogReal({ locale, t }: BlogRealProps) {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <p className="text-red-600 mb-4">{error}</p>
-            <Button onClick={() => window.location.reload()}>{t("blog.tryAgain")}</Button>
+            <Button onClick={() => window.location.reload()}>Try Again</Button>
           </div>
         </div>
       </section>
@@ -107,9 +120,7 @@ export function BlogReal({ locale, t }: BlogRealProps) {
             {t("blog.title")}
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">{t("blog.subtitle")}</p>
-          <p className="text-sm text-muted-foreground mt-2">
-            {posts.length} {t("blog.articlesFromApi")}
-          </p>
+          <p className="text-sm text-muted-foreground mt-2">{posts.length} articles from Django API</p>
         </div>
 
         {/* Search and Filters */}
@@ -118,7 +129,7 @@ export function BlogReal({ locale, t }: BlogRealProps) {
           <form onSubmit={handleSearch} className="flex gap-2 max-w-md mx-auto">
             <Input
               type="text"
-              placeholder={t("blog.searchPlaceholder")}
+              placeholder="Search articles..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="flex-1"
@@ -135,7 +146,7 @@ export function BlogReal({ locale, t }: BlogRealProps) {
               size="sm"
               onClick={() => setSelectedCategory(null)}
             >
-              {t("blog.allCategories")}
+              All Categories
             </Button>
             {categories.map((category) => (
               <Button
@@ -146,7 +157,7 @@ export function BlogReal({ locale, t }: BlogRealProps) {
                 className="gap-1"
               >
                 <span>{category.icon}</span>
-                {getLocalizedField(category, "name", locale)}
+                {getBlogCategoryName(category, locale)}
               </Button>
             ))}
           </div>
@@ -160,7 +171,7 @@ export function BlogReal({ locale, t }: BlogRealProps) {
                 className="cursor-pointer hover:bg-primary hover:text-primary-foreground"
                 onClick={() => setSelectedTag(selectedTag === tag.slug ? null : tag.slug)}
               >
-                {getLocalizedField(tag, "name", locale)}
+                {getBlogTagName(tag, locale)}
               </Badge>
             ))}
           </div>
@@ -170,7 +181,7 @@ export function BlogReal({ locale, t }: BlogRealProps) {
             <div className="text-center">
               <Button variant="ghost" size="sm" onClick={clearFilters}>
                 <Filter className="h-4 w-4 mr-2" />
-                {t("blog.clearFilters")}
+                Clear Filters
               </Button>
             </div>
           )}
@@ -179,9 +190,9 @@ export function BlogReal({ locale, t }: BlogRealProps) {
         {/* Blog Posts */}
         {posts.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-muted-foreground text-lg">{t("blog.noArticles")}</p>
+            <p className="text-muted-foreground text-lg">No articles found</p>
             <Button variant="outline" onClick={clearFilters} className="mt-4 bg-transparent">
-              {t("blog.showAllArticles")}
+              Show All Articles
             </Button>
           </div>
         ) : (
@@ -196,36 +207,43 @@ export function BlogReal({ locale, t }: BlogRealProps) {
               return (
                 <Card
                   key={post.id}
-                  className="h-full hover:shadow-2xl transition-all duration-300 hover:scale-105 border-0 shadow-xl bg-white/90 backdrop-blur-sm"
+                  className="h-full hover:shadow-2xl transition-all duration-300 hover:scale-105 border-0 shadow-xl bg-white/90 backdrop-blur-sm cursor-pointer group"
+                  onClick={(e) => handlePostClick(post, e)}
                 >
                   <CardHeader>
                     <div
-                      className={`aspect-video bg-gradient-to-br ${gradients[index % gradients.length]} rounded-lg mb-4 flex items-center justify-center shadow-lg overflow-hidden relative`}
+                      className={`aspect-video bg-gradient-to-br ${gradients[index % gradients.length]} rounded-lg mb-4 flex items-center justify-center shadow-lg overflow-hidden relative group-hover:scale-105 transition-transform duration-300`}
                     >
                       {post.cover_image ? (
                         <img
                           src={post.cover_image || "/placeholder.svg"}
-                          alt={getLocalizedField(post, "title", locale)}
+                          alt={getBlogPostTitle(post, locale)}
                           className="w-full h-full object-cover"
                         />
                       ) : (
                         <span className="text-6xl text-white">📝</span>
                       )}
+
                       {/* Featured badge */}
                       {post.is_featured && (
                         <div className="absolute top-2 right-2 bg-yellow-500 text-black px-2 py-1 rounded-full text-xs font-bold">
-                          ⭐ {t("blog.featured")}
+                          ⭐ Featured
                         </div>
                       )}
+
+                      {/* Hover overlay */}
+                      <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <span className="text-white font-semibold">Click to Read</span>
+                      </div>
                     </div>
-                    <CardTitle className="text-xl text-orange-700 line-clamp-2">
-                      {getLocalizedField(post, "title", locale)}
+
+                    <CardTitle className="text-xl text-orange-700 line-clamp-2 group-hover:text-orange-800 transition-colors">
+                      {getBlogPostTitle(post, locale)}
                     </CardTitle>
                   </CardHeader>
+
                   <CardContent>
-                    <p className="text-muted-foreground mb-4 line-clamp-3">
-                      {getLocalizedField(post, "excerpt", locale)}
-                    </p>
+                    <p className="text-muted-foreground mb-4 line-clamp-3">{getBlogPostExcerpt(post, locale)}</p>
 
                     {/* Meta information */}
                     <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
@@ -235,9 +253,19 @@ export function BlogReal({ locale, t }: BlogRealProps) {
                       </div>
                       <div className="flex items-center gap-1 bg-green-100 px-2 py-1 rounded-full">
                         <Clock className="h-4 w-4 text-green-600" />
-                        <span className="text-green-700">
-                          {post.read_time} {t("blog.readTime")}
-                        </span>
+                        <span className="text-green-700">{post.read_time} min</span>
+                      </div>
+                    </div>
+
+                    {/* Stats */}
+                    <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
+                      <div className="flex items-center gap-1">
+                        <Eye className="h-4 w-4" />
+                        <span>{post.views_count || 0}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <MessageCircle className="h-4 w-4" />
+                        <span>{post.comments_count || 0}</span>
                       </div>
                     </div>
 
@@ -249,7 +277,7 @@ export function BlogReal({ locale, t }: BlogRealProps) {
                           style={{ backgroundColor: category.color }}
                           className="text-white border-0"
                         >
-                          {category.icon} {getLocalizedField(category, "name", locale)}
+                          {category.icon} {getBlogCategoryName(category, locale)}
                         </Badge>
                       ))}
                     </div>
@@ -263,13 +291,16 @@ export function BlogReal({ locale, t }: BlogRealProps) {
                           className="text-xs"
                           style={{ backgroundColor: tag.color + "20", color: tag.color }}
                         >
-                          {getLocalizedField(tag, "name", locale)}
+                          {getBlogTagName(tag, locale)}
                         </Badge>
                       ))}
                     </div>
 
-                    <Button className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white border-0 shadow-lg">
-                      {t("blog.readMore")}
+                    <Button
+                      className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white border-0 shadow-lg group-hover:shadow-xl transition-shadow"
+                      onClick={(e) => handlePostClick(post, e)}
+                    >
+                      Read Full Article →
                     </Button>
                   </CardContent>
                 </Card>
