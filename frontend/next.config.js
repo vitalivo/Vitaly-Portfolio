@@ -1,27 +1,64 @@
-import createNextIntlPlugin from "next-intl/plugin"
-
-const withNextIntl = createNextIntlPlugin()
-
+/** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: false,
+  // ✅ Оптимизация
+  poweredByHeader: false,
+  compress: true,
+
+  // ✅ Изображения
+  images: {
+    domains: ["localhost", "127.0.0.1"],
+    formats: ["image/webp", "image/avif"],
+    unoptimized: true,
+  },
+
+  // ✅ Переменные окружения
+  env: {
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000",
+    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
+  },
+
+  // ✅ Заголовки безопасности
+  async headers() {
+    return [
+      {
+        source: "/(.*)",
+        headers: [
+          {
+            key: "X-Frame-Options",
+            value: "DENY",
+          },
+          {
+            key: "X-Content-Type-Options",
+            value: "nosniff",
+          },
+          {
+            key: "Referrer-Policy",
+            value: "origin-when-cross-origin",
+          },
+        ],
+      },
+    ]
+  },
+
+  // ✅ Редиректы
+  async redirects() {
+    return [
+      {
+        source: "/home",
+        destination: "/",
+        permanent: true,
+      },
+    ]
+  },
+
+  // ✅ ESLint и TypeScript для разработки
   eslint: {
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: false,
   },
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
-  images: {
-    domains: ["127.0.0.1", "localhost"],
-    remotePatterns: [
-      {
-        protocol: "http",
-        hostname: "127.0.0.1",
-        port: "8000",
-        pathname: "/media/**",
-      },
-    ],
-  },
-  
 }
 
-export default withNextIntl(nextConfig)
+// ✅ ES MODULE EXPORT (не CommonJS!)
+export default nextConfig
