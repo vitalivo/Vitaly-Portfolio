@@ -68,12 +68,7 @@ if config('GMAIL_USER', default='') and config('GMAIL_APP_PASSWORD', default='')
     EMAIL_HOST_PASSWORD = config('GMAIL_APP_PASSWORD')
     DEFAULT_FROM_EMAIL = f'Vitaly Portfolio <{config("GMAIL_USER")}>'
 
-# ✅ СТАТИЧЕСКИЕ ФАЙЛЫ
-STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
 
 # 🔧 ЛОГИРОВАНИЕ
 LOGGING = {
