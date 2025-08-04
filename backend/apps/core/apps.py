@@ -5,10 +5,4 @@ class CoreConfig(AppConfig):
     name = 'apps.core'
     
     def ready(self):
-        # Создаем суперпользователя при старте приложения
-        try:
-            from django.core.management import call_command
-            call_command('collectstatic', '--noinput')
-            call_command('create_superuser')
-        except Exception as e:
-            print(f"Error creating superuser: {e}")
+        import apps.core.signals  # Импортируем сигналы
