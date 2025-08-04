@@ -1,21 +1,23 @@
 {
-  "version": 2,
   "builds": [
     {
       "src": "backend/api/index.py",
-      "use": "@vercel/python",
-      "config": {
-        "maxLambdaSize": "15mb"
-      }
+      "use": "@vercel/python"
     }
   ],
   "routes": [
+    {
+      "src": "/static/(.*)",
+      "dest": "/static/$1"
+    },
     {
       "src": "/(.*)",
       "dest": "backend/api/index.py"
     }
   ],
-  "env": {
-    "DJANGO_SETTINGS_MODULE": "config.settings.production"
+  "functions": {
+    "backend/api/index.py": {
+      "includeFiles": "backend/**"
+    }
   }
 }

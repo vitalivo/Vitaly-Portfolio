@@ -54,12 +54,16 @@ DATABASES = {
 
 # ✅ СТАТИЧЕСКИЕ ФАЙЛЫ - ОТКЛЮЧАЕМ ДЛЯ VERCEL
 STATIC_URL = '/static/'
-STATIC_ROOT = None
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # ✅ МЕДИА ФАЙЛЫ - ОТКЛЮЧАЕМ ДЛЯ VERCEL
 MEDIA_URL = '/media/'
 MEDIA_ROOT = None
+
+# Дополнительные настройки для Vercel
+WHITENOISE_USE_FINDERS = True
+WHITENOISE_AUTOREFRESH = True
 
 # ✅ БЕЗОПАСНОСТЬ ДЛЯ VERCEL
 SECURE_SSL_REDIRECT = False  # ← ВАЖНО: False для Vercel
