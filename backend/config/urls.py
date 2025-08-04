@@ -3,6 +3,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.http import JsonResponse
+from apps.core.views import setup_data
 
 # ✅ HEALTH CHECK
 def health_check(request):
@@ -43,6 +44,7 @@ urlpatterns = [
     path('api/blog/', include('apps.blog.urls')),
     path('api/contacts/', include('apps.contacts.urls')),
     path('api/analytics/', include('apps.analytics.urls')),
+    path('setup/', setup_data, name='setup_data'),
 ]
 
 # ✅ СТАТИЧЕСКИЕ ФАЙЛЫ (только для разработки)
