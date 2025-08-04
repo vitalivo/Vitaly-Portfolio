@@ -17,4 +17,11 @@ from django.core.wsgi import get_wsgi_application
 django.setup()
 
 # Получаем WSGI приложение
-app = get_wsgi_application()
+application = get_wsgi_application()
+
+# ✅ ДОБАВЛЯЕМ HANDLER ДЛЯ VERCEL
+def handler(request):
+    return application(request)
+
+# ✅ ЭКСПОРТИРУЕМ КАК APP
+app = application
