@@ -14,10 +14,13 @@ ALLOWED_HOSTS = [
 ]
 
 # config/settings/production.py
-
+CORS_ALLOWED_ORIGINS = [
+    "https://vitaly-portfolio-frontend-v2.vercel.app",
+    "http://localhost:3000",  # для локальной разработки
+]
 
 # CORS - максимальные разрешения для тестирования
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOW_CREDENTIALS = True
 
 
