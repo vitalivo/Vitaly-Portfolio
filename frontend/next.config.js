@@ -13,8 +13,9 @@ const nextConfig = {
 
   // ✅ Переменные окружения
   env: {
-    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000",
-    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
+    NEXT_PUBLIC_API_URL:
+      process.env.NEXT_PUBLIC_API_URL ||
+      "https://vitaly-portfolio-backend-1s6954262-vitalivo-gmailcoms-projects.vercel.app",
   },
 
   // ✅ Заголовки безопасности
@@ -37,7 +38,7 @@ const nextConfig = {
           },
         ],
       },
-    ]
+    ];
   },
 
   // ✅ Редиректы
@@ -48,7 +49,7 @@ const nextConfig = {
         destination: "/",
         permanent: true,
       },
-    ]
+    ];
   },
 
   // ✅ ESLint и TypeScript для разработки
@@ -58,7 +59,7 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true, // Игнорировать ошибки TypeScript во время сборки
   },
-}
+};
 
 // ✅ ES MODULE EXPORT (не CommonJS!)
 export default nextConfig
