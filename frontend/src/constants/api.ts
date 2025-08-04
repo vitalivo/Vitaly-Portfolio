@@ -2,7 +2,7 @@
 // ✅ ИСПРАВЛЕННАЯ ВЕРСИЯ:
 const getApiBaseUrl = () => {
   // Используем правильный Vercel URL
-  return "https://vitaly-portfolio-frontend-v2.vercel.app/api"
+  return "https://vitaly-portfolio-backend-1s6954262-vitalivo-gmailcoms-projects.vercel.app/api"
 }
 
 export const API_BASE_URL = getApiBaseUrl()

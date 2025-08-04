@@ -69,7 +69,7 @@ export default function CommentSection({ postId, postSlug }: CommentSectionProps
         parent: replyTo
       })
 
-      const response = await fetch(`https://vitaly-portfolio-frontend-v2.vercel.app/api/blog/comments/`, {
+      const response = await fetch(`https://vitaly-portfolio-backend-1s6954262-vitalivo-gmailcoms-projects.vercel.app/api/blog/comments/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
