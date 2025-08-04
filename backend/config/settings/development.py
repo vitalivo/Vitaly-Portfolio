@@ -48,8 +48,7 @@ INTERNAL_IPS = [
 # ✅ CORS для Docker и локальной разработки
 # config/settings/production.py
 CORS_ALLOWED_ORIGINS = [
-    "https://vitaly-portfolio-frontend-5i2p5dznw-vitalivo-gmailcoms-projects.vercel.app",
-    "https://vitaly-portfolio-frontend.vercel.app",  # если есть кастомный домен
+    "https://vitaly-portfolio-frontend-v2.vercel.app",  # НОВЫЙ URL
 ]
 
 
