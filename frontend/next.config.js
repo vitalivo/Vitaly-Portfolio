@@ -15,7 +15,7 @@ const nextConfig = {
   env: {
     NEXT_PUBLIC_API_URL:
       process.env.NEXT_PUBLIC_API_URL ||
-      "https://vitaly-portfolio-backend-1s6954262-vitalivo-gmailcoms-projects.vercel.app",
+      "https://vitaly-portfolio-frontend-v2.vercel.app",
   },
 
   // ✅ Заголовки безопасности

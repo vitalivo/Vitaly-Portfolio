@@ -48,7 +48,7 @@ interface BlogPost {
 
 async function getBlogPost(slug: string): Promise<BlogPost | null> {
   try {
-    const response = await fetch(`https://vitaly-portfolio-backend-1s6954262-vitalivo-gmailcoms-projects.vercel.app/api/blog/posts/${slug}/`, {
+    const response = await fetch(`https://vitaly-portfolio-frontend-v2.vercel.app/api/blog/posts/${slug}/`, {
       cache: 'no-store'
     })
     

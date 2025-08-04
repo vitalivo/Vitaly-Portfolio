@@ -45,7 +45,7 @@ export default function CommentSection({ postId, postSlug }: CommentSectionProps
 
   const fetchComments = async () => {
     try {
-      const response = await fetch(`https://vitaly-portfolio-backend-1s6954262-vitalivo-gmailcoms-projects.vercel.app/api/blog/posts/${postSlug}/comments/`)
+      const response = await fetch(`https://vitaly-portfolio-frontend-v2.vercel.app/api/blog/posts/${postSlug}/comments/`)
       if (response.ok) {
         const data = await response.json()
         setComments(data.results || [])
@@ -69,7 +69,7 @@ export default function CommentSection({ postId, postSlug }: CommentSectionProps
         parent: replyTo
       })
 
-      const response = await fetch(`https://vitaly-portfolio-backend-1s6954262-vitalivo-gmailcoms-projects.vercel.app/api/blog/comments/`, {
+      const response = await fetch(`https://vitaly-portfolio-frontend-v2.vercel.app/api/blog/comments/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
