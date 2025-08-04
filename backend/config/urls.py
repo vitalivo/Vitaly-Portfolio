@@ -33,6 +33,7 @@ urlpatterns = [
     
     # ✅ ГЛАВНАЯ СТРАНИЦА API
     path('', api_root, name='api_root'),
+    path('api/', api_root, name='api_root_with_prefix'),
     
     # ✅ HEALTH CHECK
     path('api/health/', health_check, name='health_check'),
