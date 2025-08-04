@@ -38,7 +38,7 @@ urlpatterns = [
     path('api/health/', health_check, name='health_check'),
     
     # ✅ ВАШИ API МАРШРУТЫ
-    path('api/core/', include('apps.core.urls')),
+    path('', include('apps.core.urls')),
     path('api/accounts/', include('apps.accounts.urls')),
     path('api/portfolio/', include('apps.portfolio.urls')),
     path('api/blog/', include('apps.blog.urls')),
