@@ -1,11 +1,11 @@
 // Используем разные URL для сервера и клиента
 const getApiBaseUrl = () => {
-  // На сервере используем прямое подключение
+  // На сервере используем Vercel URL
   if (typeof window === "undefined") {
-    return "http://127.0.0.1:8000/api"
+    return "https://vitaly-portfolio-backend-6f8ju4884-vitalivo-gmailcoms-projects.vercel.app/api"
   }
-  // На клиенте используем прокси через Next.js
-  return "/api/proxy"
+  // На клиенте тоже используем Vercel URL
+  return "https://vitaly-portfolio-backend-6f8ju4884-vitalivo-gmailcoms-projects.vercel.app/api"
 }
 
 export const API_BASE_URL = getApiBaseUrl()
