@@ -1,4 +1,5 @@
 "use client"
+import { API_BASE_URL } from '@/config/api';
 import type React from "react"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
@@ -690,7 +691,7 @@ export default function HomePage() {
 
       console.log("🔄 Fetching blog posts from Django API...")
 
-      const response = await fetch("http://127.0.0.1:8000/api/blog/posts/", {
+      const response = await fetch(`${API_BASE_URL}/blog/posts/`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -753,7 +754,7 @@ export default function HomePage() {
     setIsSubmitting(true)
     try {
       const formData = new FormData(e.target as HTMLFormElement)
-      const response = await fetch("http://127.0.0.1:8000/api/contacts/messages/", {
+      const response = await fetch(`${API_BASE_URL}/contacts/messages/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

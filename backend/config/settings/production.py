@@ -15,8 +15,7 @@ ALLOWED_HOSTS = [
 
 # config/settings/production.py
 CORS_ALLOWED_ORIGINS = [
-    "https://vitaly-portfolio-frontend-lushchb1r-vitalivo-gmailcoms-projects.vercel.app",  # ← НОВЫЙ URL
-    "https://vitaly-portfolio1.vercel.app",  # ← СТАРЫЙ URL (на всякий случай)
+    "https://vitaly-portfolio-frontend-5i2p5dznw-vitalivo-gmailcoms-projects.vercel.app",
 ]
 
 CORS_ALLOW_ALL_ORIGINS = False  # ← Возвращаем безопасность# ← БЕЗОПАСНОСТЬ
