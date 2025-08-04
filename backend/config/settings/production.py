@@ -1,120 +1,53 @@
-# from .base import *
-# import dj_database_url
-
-# # Security settings
-# DEBUG = False
-# SECURE_SSL_REDIRECT = True
-# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-# SESSION_COOKIE_SECURE = True
-# CSRF_COOKIE_SECURE = True
-
-# # Database from environment variable
-# DATABASES = {
-#     'default': dj_database_url.config(
-#         default=config('DATABASE_URL')
-#     )
-# }
-
-# # Static files storage
-# STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
-
-# # Media files storage (AWS S3)
-# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-# AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID', default='')
-# AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY', default='')
-# AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME', default='')
-# AWS_S3_REGION_NAME = config('AWS_S3_REGION_NAME', default='us-east-1')
-# AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
-# AWS_DEFAULT_ACL = 'public-read'
-
-# # Logging
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': False,
-#     'handlers': {
-#         'file': {
-#             'level': 'INFO',
-#             'class': 'logging.FileHandler',
-#             'filename': BASE_DIR / 'logs' / 'django.log',
-#         },
-#     },
-#     'loggers': {
-#         'django': {
-#             'handlers': ['file'],
-#             'level': 'INFO',
-#             'propagate': True,
-#         },
-#     },
-# }
-
-# # Sentry for error tracking
-# import sentry_sdk
-# from sentry_sdk.integrations.django import DjangoIntegration
-
-# sentry_sdk.init(
-#     dsn=config('SENTRY_DSN', default=''),
-#     integrations=[DjangoIntegration()],
-#     traces_sample_rate=1.0,
-#     send_default_pii=True
-# )
-
+# config/settings/production.py
 from .base import *
-import dj_database_url
 import os
+from decouple import config
 
-# ✅ БЕЗОПАСНОСТЬ
 DEBUG = False
-SECRET_KEY = config('SECRET_KEY')
+SECRET_KEY = config('SECRET_KEY', default='django-insecure-temporary-key')
 
-# ✅ ДОМЕНЫ (обновим после развертывания)
+# ✅ ALLOWED_HOSTS
 ALLOWED_HOSTS = [
-    'vitaly-portfolio-backend.railway.app',
-    'vitalyportfolio-api.railway.app',
-    'vitalyportfolio.vercel.app',
     '.vercel.app',
-    '.railway.app',
     'localhost',
     '127.0.0.1',
 ]
 
-# ✅ CORS ДЛЯ ПРОДАКШЕНА
+# config/settings/production.py
 CORS_ALLOWED_ORIGINS = [
-    "https://vitalyportfolio.vercel.app",
-    "https://vitaly-portfolio-frontend.vercel.app",
-    "http://localhost:3000",  # для разработки
+    "https://vitaly-portfolio-frontend-lushchb1r-vitalivo-gmailcoms-projects.vercel.app",  # ← НОВЫЙ URL
+    "https://vitaly-portfolio1.vercel.app",  # ← СТАРЫЙ URL (на всякий случай)
 ]
 
-CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOW_ALL_ORIGINS = False  # ← Возвращаем безопасность# ← БЕЗОПАСНОСТЬ
 CORS_ALLOW_CREDENTIALS = True
 
+# ✅ CSRF
 CSRF_TRUSTED_ORIGINS = [
-    "https://vitalyportfolio.vercel.app",
-    "https://vitaly-portfolio-frontend.vercel.app",
-    "https://vitaly-portfolio-backend.railway.app",
+    "https://vitaly-portfolio1.vercel.app",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
 ]
 
-# ✅ БАЗА ДАННЫХ (Railway PostgreSQL)
+# ✅ БАЗА ДАННЫХ (Neon PostgreSQL)
 DATABASES = {
     'default': dj_database_url.config(
-        default=config('DATABASE_URL'),
+        default='postgresql://neondb_owner:npg_zdswc0SZrek6@ep-hidden-shadow-ab4n19rj-pooler.eu-west-2.aws.neon.tech/neondb?sslmode=require',
         conn_max_age=600,
-        conn_health_checks=True,
     )
 }
 
-# ✅ СТАТИЧЕСКИЕ ФАЙЛЫ с WhiteNoise
-MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
-
+# ✅ СТАТИЧЕСКИЕ ФАЙЛЫ - ОТКЛЮЧАЕМ ДЛЯ VERCEL
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATIC_ROOT = None
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
-# ✅ МЕДИА ФАЙЛЫ
+# ✅ МЕДИА ФАЙЛЫ - ОТКЛЮЧАЕМ ДЛЯ VERCEL
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = None
 
-# ✅ БЕЗОПАСНОСТЬ
-SECURE_SSL_REDIRECT = True
+# ✅ БЕЗОПАСНОСТЬ ДЛЯ VERCEL
+SECURE_SSL_REDIRECT = False  # ← ВАЖНО: False для Vercel
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True

@@ -4,44 +4,40 @@ import dj_database_url  # ✅ ДОБАВЛЯЕМ для Docker
 # Debug settings
 DEBUG = True
 
-# ✅ ALLOWED_HOSTS для Docker
-ALLOWED_HOSTS = [
-    'localhost',
-    '127.0.0.1',
-    '0.0.0.0',  # для Docker
-    'backend',  # для Docker Compose
-]
+# ALLOWED_HOSTS = [
+#     'vitaly-portfolio-backend-production.up.railway.app',
+#     '.railway.app',
+#     '.vercel.app',
+#     'localhost',
+#     '127.0.0.1',
+#     '0.0.0.0',
+#     '*',
+# ]
 
-# ✅ Database for development (поддержка Docker)
-if config('DATABASE_URL', default=''):
-    # Docker PostgreSQL
-    DATABASES = {
-        'default': dj_database_url.config(
-            default=config('DATABASE_URL'),
-            conn_max_age=600,
-        )
-    }
-else:
-    # Локальная PostgreSQL (ваши настройки)
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': config('DB_NAME', default='vitaly_portfolio'),
-            'USER': config('DB_USER', default='admin'),
-            'PASSWORD': config('DB_PASSWORD', default='admin123'),
-            'HOST': config('DB_HOST', default='localhost'),
-            'PORT': config('DB_PORT', default='5432'),
-        }
-    }
+# # ✅ Database for development (поддержка Docker)
+# if config('DATABASE_URL', default=''):
+#     # Docker PostgreSQL
+#     DATABASES = {
+#         'default': dj_database_url.config(
+#             default=config('DATABASE_URL'),
+#             conn_max_age=600,
+#         )
+#     }
+# else:
+#     # Локальная PostgreSQL (ваши настройки)
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.postgresql',
+#             'NAME': config('DB_NAME', default='vitaly_portfolio'),
+#             'USER': config('DB_USER', default='admin'),
+#             'PASSWORD': config('DB_PASSWORD', default='admin123'),
+#             'HOST': config('DB_HOST', default='localhost'),
+#             'PORT': config('DB_PORT', default='5432'),
+#         }
+#     }
 
-# Additional apps for development
-INSTALLED_APPS += [
-    'debug_toolbar',
-]
 
-MIDDLEWARE += [
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
-]
+
 
 # Debug toolbar settings
 INTERNAL_IPS = [
@@ -50,11 +46,12 @@ INTERNAL_IPS = [
 ]
 
 # ✅ CORS для Docker и локальной разработки
+# config/settings/production.py
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "http://frontend:3000",  # для Docker
+    "https://vitaly-portfolio-frontend-5i2p5dznw-vitalivo-gmailcoms-projects.vercel.app",
+    "https://vitaly-portfolio-frontend.vercel.app",  # если есть кастомный домен
 ]
+
 
 CORS_ALLOW_ALL_ORIGINS = True  # только для разработки
 CORS_ALLOW_CREDENTIALS = True

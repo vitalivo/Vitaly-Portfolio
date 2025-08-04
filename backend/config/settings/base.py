@@ -13,7 +13,7 @@ SECRET_KEY = config('SECRET_KEY', default='django-insecure-change-me-in-producti
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=lambda v: [s.strip() for s in v.split(',')])
+# ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=lambda v: [s.strip() for s in v.split(',')])
 
 # Application definition
 DJANGO_APPS = [
@@ -48,6 +48,7 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
@@ -78,27 +79,27 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-# ✅ Database (поддержка Docker + ваши настройки)
-if config('DATABASE_URL', default=''):
-    # Docker PostgreSQL
-    DATABASES = {
-        'default': dj_database_url.config(
-            default=config('DATABASE_URL'),
-            conn_max_age=600,
-        )
-    }
-else:
-    # Ваши локальные настройки
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': config('DB_NAME', default='vitaly_portfolio'),
-            'USER': config('DB_USER', default='postgres'),
-            'PASSWORD': config('DB_PASSWORD', default='postgres'),
-            'HOST': config('DB_HOST', default='localhost'),
-            'PORT': config('DB_PORT', default='5432'),
-        }
-    }
+# # ✅ Database (поддержка Docker + ваши настройки)
+# if config('DATABASE_URL', default=''):
+#     # Docker PostgreSQL
+#     DATABASES = {
+#         'default': dj_database_url.config(
+#             default=config('DATABASE_URL'),
+#             conn_max_age=600,
+#         )
+#     }
+# else:
+#     # Ваши локальные настройки
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.postgresql',
+#             'NAME': config('DB_NAME', default='vitaly_portfolio'),
+#             'USER': config('DB_USER', default='postgres'),
+#             'PASSWORD': config('DB_PASSWORD', default='postgres'),
+#             'HOST': config('DB_HOST', default='localhost'),
+#             'PORT': config('DB_PORT', default='5432'),
+#         }
+#     }
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -216,7 +217,7 @@ GMAIL_APP_PASSWORD = config('GMAIL_APP_PASSWORD', default='avsx tsjl brds cmlf')
 RESEND_API_KEY = config('RESEND_API_KEY', default='re_XD4M64CE_G3U51vTindYeXuVN4XdaRuds')
 
 # 🔧 TELEGRAM BOT НАСТРОЙКИ
-TELEGRAM_BOT_TOKEN = config('TELEGRAM_BOT_TOKEN')
+TELEGRAM_BOT_TOKEN = config('TELEGRAM_BOT_TOKEN', default='')
 TELEGRAM_CHAT_ID = config('TELEGRAM_CHAT_ID', default='769259836')
 
 # Celery Configuration
