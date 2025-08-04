@@ -20,7 +20,7 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 # CORS - максимальные разрешения для тестирования
-CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
 

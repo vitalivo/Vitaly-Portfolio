@@ -176,26 +176,7 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': True,
 }
 
-# CORS настройки
-CORS_ALLOWED_ORIGINS = [
-    "https://vitaly-portfolio-frontend-v2.vercel.app",
-]
 
-CORS_ALLOW_ALL_ORIGINS = True  # Временно для тестирования
-CORS_ALLOW_CREDENTIALS = True
-
-# Дополнительные CORS заголовки
-CORS_ALLOW_HEADERS = [
-    'accept',
-    'accept-encoding',
-    'authorization',
-    'content-type',
-    'dnt',
-    'origin',
-    'user-agent',
-    'x-csrftoken',
-    'x-requested-with',
-]
 
 # 🔧 CSRF НАСТРОЙКИ
 CSRF_TRUSTED_ORIGINS = [
